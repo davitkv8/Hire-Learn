@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      {% if title %}
+        <title>{{ title }}</title>
+       {% endif %}
+      <meta charset="utf-8">
+      <link rel="icon" href={% static 'blog/favicon/logo.png' %}>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link type="text/css" rel="stylesheet" href='{% static 'blog/main.css' %}'>
+
+
+   {% block link %}{% endblock link %}
+{#      <link rel="stylesheet" href='../../'>#}
+      <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   </head>
+  <style>
+       body{
+           background-position: center;
+           background-image: url({% static "blog/background_images/bg4.jpg" %});
+       }
+   </style>
+
+   <body>
+      <nav style="height: 75px">
+         <div class="logo">
+            Hire & Learn
+         </div>
+         <label for="btn" class="icon">
+         <span class="fa fa-bars"></span>
+         </label>
+         <ul>
+            <li><a href={% url 'main-view' %}>Home</a></li>
+            <li><a href="">Contact</a></li>
+
+             {% if user.is_authenticated == False %}
+                <li>
+                   <label for="btn-2" class="show">Services +</label>
+                   <a href="{% url 'login' %}">Log In</a>
+                   <ul>
+                      <li><a href="{% url 'register' %}">Sign Up</a></li>
+                   </ul>
+                </li>
+             {% elif user.is_authenticated == True %}
+                 {% if user.userstatus.status == 'teacher' %}
+                    <li><a href={% url 'complete-user' request.user.pk %}>Profile</a></li>
+                 {% elif user.userstatus.status == 'student' %}
+                     <li><a href={% url 'classroom' %}>Class Room</a></li>
+                 {% endif %}
+                 <li style="padding-top: 12px">
+                   <button id="notification-button" type="button" class="icon-button" style="border: none">
+{#                       <span>Messages</span>#}
+                      <span class="material-icons">notifications</span>
+                      <span class="icon-button__badge">2</span>
+                  </button>
+                 </li>
+                 <li><a href={% url 'logout' %}>Log Out</a></li>
+             {% endif %}
+
+         </ul>
+      </nav>
+
+
+      <section>
+          {% block content %}
+          {% endblock content %}
+      </section>
+   </body>
+    <script type="text/javascript">
+        document.getElementById("notification-button").onclick = function () {
+            location.href = "http://127.0.0.1:8000/classroom/chat/";
+        };
+    </script>
+</html>
