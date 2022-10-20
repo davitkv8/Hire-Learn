@@ -16,11 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from django.contrib.auth.views import LogoutView
+
 from blog.views import main_view
+from users.views import Login, register, complete_user_registration, ajax_file_upload_save
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # BLOG APP
     path('', main_view, name='main-view'),
+
+    # USERS APP
+    path('login/', Login.as_view(), name='login'),
+    path('register/', register, name='register'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+
+    path('complete/profile/<int:pk>/', complete_user_registration, name='complete-user'),
+    path('ajax_file_upload_save/', ajax_file_upload_save, name='upload-file')
 ]

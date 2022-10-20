@@ -1,0 +1,83 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block link %}
+    <link rel="stylesheet" href="{% static 'users/register.css' %}">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'users/complete_user.css' %}">
+{% endblock link %}
+
+{% block content %}
+      <div id="login-box">
+      <form enctype="multipart/form-data" onsubmit="onFormSubmit(event)">
+{#        {% csrf_token %}#}
+{#         <div class="left">#}
+
+             <div class="container">
+                 <div class="row form-group">
+
+                    <div class="col-lg-12">
+                        <label>Select File 1 : </label>
+                        <input type="file" name="file1" id="file1">
+                    </div>
+
+{#                     <div class="col-lg-12">#}
+{#                        <button type="submit" class="btn btn-success">SUBMIT</button>#}
+{#                    </div>#}
+
+
+                 </div>
+
+            <label for="id_description">About you: (3000 words)</label>
+            {% render_field form.student.description class="about-me" style=" width: 450px; height: 125px; background: rgba(0, 0, 0, 0.5); opacity: 50%" %}
+{#            </div>#}
+         <div class="right">
+
+             {% if form.teacher %}
+
+                <label for="id_birth_date">Birth date:</label>
+                {{ form.teacher.birth_date }}
+                <label for="id_lectures_per_week">Full name:</label>
+                {% render_field form.teacher.full_name value=full_name %}
+                <label for="id_lecture_price">Subject:</label>
+                {{ form.subject }}
+                <label for="id_platform">Monthly fee:</label>
+                {{ form.teacher.lecture_price }}
+                <label for="id_subject">Platform: (Primary)</label>
+                {{ form.teacher.platform }}
+
+             {% elif form.student %}
+
+             {% endif %}
+
+            <button type="submit" class="btn btn-success">Register</button>
+         </div>
+         </div>
+        </form>
+       </div>
+
+
+    <script>
+    function onFormSubmit(event) {
+        event.preventDefault();
+
+        var formData=new FormData();
+        formData.append("file1",document.getElementById("file1").files[0]);
+
+        var xhr=new XMLHttpRequest();
+        xhr.open("POST","http://127.0.0.1:8000/ajax_file_upload_save/",true);
+        xhr.upload.addEventListener("progress",function (ev) {
+           if(ev.lengthComputable){
+               var percentage=(ev.loaded/ev.total*100|0);
+               document.getElementById("progress_div").style["display"]="block";
+               document.getElementById("progress_bar").style["width"]=""+percentage+"%";
+               document.getElementById("progress_bar").innerHTML=""+percentage+"%";
+               document.getElementById("progress_text").innerHTML="Uploaded : "+parseInt(ev.loaded/1000000)+"/"+parseInt(ev.total/1000000)+" MB";
+           }
+        });
+        xhr.send(formData);
+
+    }
+</script>
+
+{% endblock content %}
