@@ -65,7 +65,7 @@
 } */
 
 #login-box {
-  opacity: 70%;
+  opacity: 85%;
   position: relative;
   margin: 3% auto;
   width: 1000px;
@@ -74,3 +74,12 @@
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
+
+#hashTag-div{
+  margin: auto;
+  width: 80%;
+  /*border: 3px solid green;*/
+  padding: 10px;
+  padding-top: 150px;
+}
+
