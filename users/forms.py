@@ -39,7 +39,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['hashtags', 'description']
+        fields = ['description']
         widgets = {
             # 'birth_date': forms.DateInput(attrs={'required': 'required', 'type': 'date'}),
             'description': forms.Textarea(attrs={"style": "resize: none"})

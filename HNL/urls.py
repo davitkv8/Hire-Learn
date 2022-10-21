@@ -19,7 +19,8 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView
 
 from blog.views import main_view
-from users.views import Login, register, complete_user_registration, ajax_file_upload_save
+from users.views import Login, register,\
+    complete_user_registration, hash_tags, get_registration_field_namings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,5 +34,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
 
     path('complete/profile/<int:pk>/', complete_user_registration, name='complete-user'),
-    path('ajax_file_upload_save/', ajax_file_upload_save, name='upload-file')
+    # path('ajax_file_upload_save/', name='upload-file'),
+    path('hashTags/', hash_tags, name='hashTags'),
+    path('get_field_namings/', get_registration_field_namings, name='fieldNamings'),
 ]

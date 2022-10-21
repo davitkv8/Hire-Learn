@@ -34,7 +34,7 @@ class UserStatus(models.Model):
 
 
 class UserProfile(models.Model):
-    description = models.TextField(blank=False, null=False, max_length=6000)
+    description = models.TextField(blank=False, null=True, max_length=6000)
     hashtags = models.ManyToManyField(HashTag)
     image = models.OneToOneField(UserImage, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=False)

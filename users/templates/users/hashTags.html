@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block link %}
+{#    <link rel="stylesheet" href="{% static 'users/register.css' %}">#}
+    <link rel="stylesheet" href="{% static 'users/hashTags.css' %}">
+{#    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/thinline.css">#}
+
+{% endblock link %}
+
+{% block content %}
+<div class="wrapper" id="hashTag-div">
+  <div class="title">
+    <img src="tag.svg" alt="icon">
+    <h2>Tags</h2>
+  </div>
+  <div class="content">
+    <p>Press enter or add a comma after each tag</p>
+    <ul id="hashTags"><input type="text" spellcheck="false"></ul>
+  </div>
+  <div class="details">
+    <p><span>10</span> tags are remaining</p>
+    <button>Remove All</button>
+  </div>
+</div>
+<script src={% static 'users/hashTags.js' %}></script>
+{% endblock content %}
