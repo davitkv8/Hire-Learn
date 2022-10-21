@@ -26,7 +26,15 @@ function onFormSubmit(event) {
 
     var formData=new FormData();
 
+    // csrf = {csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val()}
+
+    formData.append(
+        "csrfmiddlewaretoken", $('[name=csrfmiddlewaretoken]').val()
+    );
+
     formData.append("file1", document.getElementById("file1").files[0]);
+
+
     for (const [key, value] of Object.entries(fields)) {
           console.log(value);
           formData.append(`${key}`, document.getElementById(`${value}`).value);
@@ -34,7 +42,13 @@ function onFormSubmit(event) {
         }
 
     var xhr=new XMLHttpRequest();
-    xhr.open("POST",url.pathname,true);
+
+    xhr.onreadystatechange = function() {
+        var json = JSON.parse(this.responseText);
+        window.location.href = json.success;
+    };
+
+    xhr.open("POST",url.pathname,false);
     xhr.send(formData);
 
 }

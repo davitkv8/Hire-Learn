@@ -5,7 +5,7 @@ import imghdr
 
 
 def parse_values_from_lists_when_ajax_resp(obj):
-    return {key: value[0] for key, value in obj.items()}
+    return {key: value[0] for key, value in obj.items() if key != 'csrfmiddlewaretoken'}
 
 
 def validate_image(file):

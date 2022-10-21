@@ -1,11 +1,13 @@
 import json
 
-from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.urls import reverse
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, UserProfileForm
 from .namings import USERPROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT
@@ -18,6 +20,7 @@ class Login(LoginView):
 
 
 def register(request):
+    print("HELLO!")
     form = TeacherRegisterForm
     if request.method == 'POST':
         form = TeacherRegisterForm(request.POST)
@@ -56,7 +59,11 @@ def get_registration_field_namings(request):
     return HttpResponse(json.dumps(helpers))
 
 
-@csrf_exempt
+def hash_tags(request):
+    return render(request, 'users/hashTags.html')
+
+
+# @csrf_exempt
 @login_required
 def complete_user_registration(request, pk):  # User's Primary key
 
@@ -82,25 +89,14 @@ def complete_user_registration(request, pk):  # User's Primary key
 
         form.Meta.model.objects.create(**data)
 
-        return
+        url = reverse('register')
+
+        return JsonResponse(status=302, data={'success': url})
 
     user_full_name = request.user.first_name + ' ' + request.user.last_name
-
+    # return redirect("register")
     return render(request, 'users/complete_user.html',
                   {'form': form, 'full_name': user_full_name})
 
 
-@csrf_exempt
-@login_required
-# def ajax_file_upload_save(request):
-#     file1 = request.FILES['file1']
-#     user_image = UserImage.objects.create(userImage=file1)
-#
-#     return HttpResponseRedirect(
-#         reverse('complete-user', kwargs={'pk': request.user.pk})
-#     )
-
-
-def hash_tags(request):
-    return render(request, 'users/hashTags.html')
 

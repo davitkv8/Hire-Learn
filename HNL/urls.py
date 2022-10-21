@@ -34,7 +34,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
 
     path('complete/profile/<int:pk>/', complete_user_registration, name='complete-user'),
-    # path('ajax_file_upload_save/', name='upload-file'),
     path('hashTags/', hash_tags, name='hashTags'),
     path('get_field_namings/', get_registration_field_namings, name='fieldNamings'),
 ]

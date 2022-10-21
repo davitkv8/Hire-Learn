@@ -8,10 +8,10 @@
 {% endblock link %}
 
 {% block content %}
+      {% csrf_token %}
       {{ request.user.id|json_script:"user_id" }}
       <div id="login-box">
       <form enctype="multipart/form-data" onsubmit="onFormSubmit(event)">
-        {% csrf_token %}
         {% if request.user.userstatus.userStatus == 'teacher' %}
          <div class="left">
 
