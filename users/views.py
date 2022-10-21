@@ -89,7 +89,7 @@ def complete_user_registration(request, pk):  # User's Primary key
 
         form.Meta.model.objects.create(**data)
 
-        url = reverse('register')
+        url = reverse('hashTags')
 
         return JsonResponse(status=302, data={'success': url})
 

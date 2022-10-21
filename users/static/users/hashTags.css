@@ -1,6 +1,7 @@
+
 .wrapper{
-  width: 496px;
-  background: #fff;
+   /*width: 496px;*/
+  /* background: #fff; */
   border-radius: 10px;
   padding: 18px 25px 20px;
   box-shadow: 0 0 30px rgba(0,0,0,0.06);
@@ -58,4 +59,18 @@
   border-radius: 5px;
   background: #5372F0;
   transition: background 0.3s ease;
+}
+/* .details button:hover{
+  background: #2c52ed;
+} */
+
+#login-box {
+  opacity: 70%;
+  position: relative;
+  margin: 3% auto;
+  width: 1000px;
+  height: 600px;
+  background: #FFF;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
