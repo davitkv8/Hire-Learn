@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
+from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 
 
 class UserImage(models.Model):
@@ -9,7 +10,9 @@ class UserImage(models.Model):
 
 
 class HashTag(models.Model):
+
     hashTag = models.CharField(max_length=55)
+    objects = BulkUpdateOrCreateQuerySet.as_manager()
 
     def __repr__(self):
         return f"{self.hashTag}"

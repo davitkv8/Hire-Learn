@@ -4,6 +4,7 @@ var suggestions = [];
 
 const ul = document.getElementById("hashTags"),
 input = document.getElementById("hashTags"),
+registerButton = document.getElementById("register"),
 tagNumb = document.querySelector(".details span");
 let maxTags = 10,
 tags = [];
@@ -14,7 +15,7 @@ function countTags(){
     tagNumb.innerText = maxTags - tags.length;
 }
 function createTag(){
-    console.log("CALLED!")
+    // console.log("CALLED!")
     ul.querySelectorAll("li").forEach(li => li.remove());
     tags.slice().reverse().forEach(tag =>{
         let liTag = `<li>${tag} <i class="uit uit-multiply" onclick="remove(this, '${tag}')"></i></li>`;
@@ -35,7 +36,7 @@ function addTag(e){
         if(tag.length > 1 && !tags.includes(tag)){
             if(tags.length < 10){
                 tag.split(',').forEach(tag => {
-                    console.log(tag)
+                    // console.log(tag)
                     tags.push(tag);
                     createTag();
                 });
@@ -53,7 +54,7 @@ removeBtn.addEventListener("click", () =>{
 });
 
 
-
+registerButton.addEventListener("click", register);
 
 
 (function () {
@@ -125,3 +126,19 @@ removeBtn.addEventListener("click", () =>{
   }
 
 })();
+
+
+function register() {
+    let data = {"csrfmiddlewaretoken": $('[name=csrfmiddlewaretoken]').val()};
+    data["hashTag"] = tags;
+
+    $.ajax({
+    type: "POST",
+    url: url + "/hashTags/",
+    data: data,
+    success: function(result){
+        window.location.href = result.success;
+    }
+  });
+
+}

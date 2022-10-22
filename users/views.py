@@ -18,9 +18,16 @@ from .helpers import parse_values_from_lists_when_ajax_resp, validate_image
 class Login(LoginView):
     template_name = 'users/login.html'
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("main-view")
+        return super().get(request)
+
 
 def register(request):
-    print("HELLO!")
+    if request.user.is_authenticated:
+        return redirect("main-view")
+
     form = TeacherRegisterForm
     if request.method == 'POST':
         form = TeacherRegisterForm(request.POST)
@@ -38,14 +45,7 @@ def register(request):
                                     )
 
             login(request, new_user)
-
-            # if request.POST['user'] == 'teacher':
-            #     registered_user.save()
             return redirect('complete-user', registered_user.pk)
-            #
-            # elif request.POST['user'] == 'student':
-            #     registered_user.save()
-            #     return redirect('main-view')
 
     return render(request, 'users/register.html', {'form': form})
 
@@ -60,6 +60,29 @@ def get_registration_field_namings(request):
 
 
 def hash_tags(request):
+
+    if request.method == "POST":
+
+        key = "hashTag"
+        data = request.POST.getlist(key + "[]")
+        items = [HashTag(hashTag=hash_tag) for hash_tag in data]
+
+        try:
+
+            HashTag.objects.bulk_update_or_create(
+                items, [key], match_field="hashTag"
+            )
+
+            request.user.userprofile.hashtags.add(
+                *items
+            )
+
+            url = reverse("main-view")
+            return JsonResponse(status=200, data={'success': url})
+
+        except Exception as e:
+            print(e)
+
     return render(request, 'users/hashTags.html')
 
 
