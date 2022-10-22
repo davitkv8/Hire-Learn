@@ -25,9 +25,8 @@ class Subject(models.Model):
 class UserStatus(models.Model):
     userStatus = models.CharField(max_length=55, choices=(
         ('student', 'student'),
-        ('lecturer', 'lecturer')
+        ('teacher', 'teacher')
     ))
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __repr__(self):
         return f"{self.userStatus}"
