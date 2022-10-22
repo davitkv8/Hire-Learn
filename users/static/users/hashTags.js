@@ -1,3 +1,7 @@
+var url = window.location.origin
+var suggestions = [];
+
+
 const ul = document.getElementById("hashTags"),
 input = document.getElementById("hashTags"),
 tagNumb = document.querySelector(".details span");
@@ -27,9 +31,6 @@ function remove(element, tag){
 }
 function addTag(e){
     if(e.key == "Enter"){
-        console.log(e);
-        console.log(e.target)
-        console.log(e.target.value)
         let tag = e.target.value.replace(/\s+/g, ' ');
         if(tag.length > 1 && !tags.includes(tag)){
             if(tags.length < 10){
@@ -79,17 +80,33 @@ removeBtn.addEventListener("click", () =>{
     let data = target.value;
     ulField.innerHTML = ``;
     if (data.length) {
-      let autoCompleteValues = autoComplete(data);
-      autoCompleteValues.forEach(value => { addItem(value); });
+      autoComplete(data);
+      // console.log(suggestions);
+      suggestions.forEach(value => { addItem(value); });
       ulField.insertBefore(newElement, ulField.firstChild);
     }
   }
 
   function autoComplete(inputValue) {
-    let destination = ["Italy", "Spain", "Portugal", "Brazil"];
-    return destination.filter(
-      (value) => value.toLowerCase().includes(inputValue.toLowerCase())
-    );
+  let info = {"csrfmiddlewaretoken": $('[name=csrfmiddlewaretoken]').val()};
+  info["inputData"] = inputValue;
+
+  $.ajax({
+    type: "GET",
+    url: url + "/stringMatcher/",
+    data: info,
+    success: function(result){
+        suggestions = JSON.parse(result)["suggestions"];
+    }
+  });
+
+
+
+
+    // let destination = ["Italy", "Spain", "Portugal", "Brazil"];
+    // return destination.filter(
+    //   (value) => value.toLowerCase().includes(inputValue.toLowerCase())
+    // );
   }
 
   function addItem(value) {

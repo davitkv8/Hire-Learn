@@ -11,7 +11,7 @@ from django.urls import reverse
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, UserProfileForm
 from .namings import USERPROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT
-from users.models import UserStatus, TeachersProfile, UserImage, UserProfile
+from users.models import UserStatus, TeachersProfile, UserImage, UserProfile, HashTag
 from .helpers import parse_values_from_lists_when_ajax_resp, validate_image
 
 
@@ -97,6 +97,22 @@ def complete_user_registration(request, pk):  # User's Primary key
     # return redirect("register")
     return render(request, 'users/complete_user.html',
                   {'form': form, 'full_name': user_full_name})
+
+
+def string_matcher(request):
+
+    user_input = request.GET['inputData']
+    suggestions = list(
+        HashTag.objects.filter(hashTag__icontains=user_input).values_list("hashTag", flat=True)
+    )
+
+    return HttpResponse(
+        json.dumps(
+            {
+                "suggestions": suggestions
+            }
+        )
+    )
 
 
 
