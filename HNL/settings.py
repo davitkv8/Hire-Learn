@@ -84,8 +84,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "hirenlearn",
-        "USER": "testuser",
-        "PASSWORD": "testuser123",
+        "USER": "postgres",
+        "PASSWORD": "datodato123",
         "HOST": "localhost",
         "PORT": 5432,
     }

@@ -24,12 +24,12 @@ for username in ["davit"]:
         print(f"User {username} already exists")
 
 
-for user_status in ["teacher", "student"]:
-    UserStatus.objects.update_or_create(
-            userStatus=user_status,
-            defaults={
-                "userStatus": user_status,
-            }
-        )
+# for user_status in ["teacher", "student"]:
+#     UserStatus.objects.update_or_create(
+#             userStatus=user_status,
+#             defaults={
+#                 "userStatus": user_status,
+#             }
+#         )
 
 print("ALL PROCESSES ENDED SUCCESSFULLY")

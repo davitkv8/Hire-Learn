@@ -28,6 +28,8 @@ class UserStatus(models.Model):
         ('teacher', 'teacher')
     ))
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     def __repr__(self):
         return f"{self.userStatus}"
 
