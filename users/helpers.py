@@ -14,7 +14,5 @@ def parse_values_from_lists_when_ajax_resp(obj):
 
 
 def validate_image(file):
-    if imghdr.what(file):
-        return True
-    return False
+    return imghdr.what(file) is not None
 

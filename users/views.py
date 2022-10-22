@@ -73,8 +73,12 @@ def hash_tags(request):
                 items, [key], match_field="hashTag"
             )
 
+            committed_and_saved_data = list(
+                HashTag.objects.filter(hashTag__in=data)
+            )
+
             request.user.userprofile.hashtags.add(
-                *items
+                *committed_and_saved_data
             )
 
             url = reverse("main-view")
@@ -126,7 +130,8 @@ def string_matcher(request):
 
     user_input = request.GET['inputData']
     suggestions = list(
-        HashTag.objects.filter(hashTag__icontains=user_input).values_list("hashTag", flat=True)
+        HashTag.objects.filter(
+            hashTag__icontains=user_input).values_list("hashTag", flat=True)
     )
 
     return HttpResponse(
