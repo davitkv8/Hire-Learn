@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block link %}
+{#    <link rel="stylesheet" href="{% static 'users/register.css' %}">#}
+    <link rel="stylesheet" href="{% static 'users/hashTags.css' %}">
+{#    <link rel="stylesheet" href="https://unicons.ico/nscout.com/release/v4.0.0/css/thinline.css">#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+{% endblock link %}
+
+{% block content %}
+<div id="login-box">
+    {% csrf_token %}
+    <div class="wrapper" id="hashTag-div">
+      <div class="title">
+        <img src="{% static 'users/tag.png' %}" alt="icon" style="width: 30px; height: 30px">
+        <h2>Tags</h2>
+      </div>
+      <div class="content">
+        <p>Press enter or add a comma after each tag</p>
+        <ul id="hashTags"><input type="text" spellcheck="false" id="userInputTags"></ul>
+        <ul id="suggestions"></ul>
+      </div>
+      <div class="details">
+        <p><span>10</span> tags are remaining</p>
+        <button>Remove All</button>
+      </div>
+    </div>
+    <button type="submit" id="register" class="btn btn-success" style="margin: 30px 0 0 420px; font-size: 20px">REGISTER</button>
+</div>
+<script src={% static 'users/hashTags.js' %}></script>
+{% endblock content %}

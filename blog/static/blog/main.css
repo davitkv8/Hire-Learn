@@ -94,7 +94,7 @@ nav ul ul ul li{
   margin-left: 40px;
 }
 @media all and (max-width: 968px) {
-  nav ul{
+  /* nav ul{
     margin-right: 0px;
     float: left;
   }
@@ -141,8 +141,8 @@ nav ul ul ul li{
     display: none;
     opacity: 1;
     visibility: visible;
-  }
-  nav ul ul a{
+  } */
+  /* nav ul ul a{
     padding-left: 40px;
   }
   nav ul ul ul a{
@@ -153,22 +153,22 @@ nav ul ul ul li{
   }
   [id^=btn]:checked + ul{
     display: block;
-  }
-  nav ul ul li{
+  } */
+  /* nav ul ul li{
     border-bottom: 0px;
-  }
+  } */
   span.cancel:before{
     content: '\f00d';
   }
 }
-.content{
+/* .content{
   z-index: -1;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
   text-align: center;
-}
+} */
 header{
   font-size: 35px;
   font-weight: 600;
