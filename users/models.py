@@ -40,20 +40,35 @@ class UserStatus(models.Model):
         return f"{self.userStatus}"
 
 
-class UserProfile(models.Model):
+class BasicAbstractProfile(models.Model):
     description = models.TextField(blank=False, null=True, max_length=6000)
     hashtags = models.ManyToManyField(HashTag)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=False)
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
+    record_creation_datetime = models.DateTimeField(editable=True, auto_now=True)
 
+    user_status = models.ForeignKey(UserStatus, editable=False, on_delete=models.CASCADE)
     user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        self.user_status = self.user.userstatus
+        super().save(*args, **kwargs)
+
+    def get_description(self):
+        return self.description[:300]
 
     def __repr__(self):
         return f"{self.user.username}"
 
 
-class TeachersProfile(UserProfile):
+class StudentProfile(BasicAbstractProfile):
+
+    def __repr__(self):
+        return f"{self.user.username}"
+
+
+class TeacherProfile(BasicAbstractProfile):
     birth_date = models.DateField(blank=False, null=False)
     full_name = models.CharField(blank=False, null=False, max_length=55)
     lecture_price = models.PositiveIntegerField(blank=False, null=False, validators=[MaxValueValidator(10000)])
@@ -73,8 +88,6 @@ class TeachersProfile(UserProfile):
     def __str__(self):
         return f"{self.full_name}'s Profile."
 
-    # def get_description(self):
-    #     return self.description[:300]
     #
     # def get_friends(self):
     #     return self.friends.all()

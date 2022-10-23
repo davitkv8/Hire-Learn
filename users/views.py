@@ -1,18 +1,74 @@
 import json
 
 from django.shortcuts import render, redirect, HttpResponse
+from django.urls import reverse
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.views.generic import UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from django.urls import reverse
 
-from .forms import TeacherRegisterForm, TeacherProfileForm, UserProfileForm
-from .namings import USERPROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT
-from users.models import UserStatus, TeachersProfile, Image, UserProfile, HashTag
+from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
+from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT
+from users.models import UserStatus, TeacherProfile, Image, StudentProfile, HashTag
 from .helpers import parse_values_from_lists_when_ajax_resp, validate_image, create_foreign_keys_where_necessary
+
+
+class UpdateTeacherProfileView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
+    model = TeacherProfile
+    template_name = 'users/profile.html'
+    context_object_name = 'object'
+    fields = ['full_name', 'lecture_price', 'description',
+              'platform', 'subject']
+
+    def get_queryset(self):
+        pk = self.kwargs.get(self.pk_url_kwarg)
+
+    def get(self, request, *args, **kwargs):
+        print("HERE")
+        pass
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['friendRequest'] = Relationship.objects.filter(receiver=self.object, status='send').all()
+    #     context['hasTimeTable'] = TimeTable.objects.filter(user=self.object.user).first()
+    #     context['feedbacks'] = self.object.feedback.all().order_by('date')[:10]
+    #     # context['verification_request'] = email_verification(request=self.request, pk=self.request.user.pk)
+    #     return context
+
+    def test_func(self):
+        profile = self.get_object()
+        return self.request.user == profile.user
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+    # def post(self, request, *args, **kwargs):
+    #     if request.is_ajax():
+    #         if request.POST["type"] == "verify_request":
+    #             email_verification(self.request, request.POST["user"])
+    #             return HttpResponse()
+    #
+    #         rel = Relationship.objects.get(receiver=request.user.teachersprofile,
+    #                                        sender=request.POST["user"], status="send")
+    #         if request.POST["type"] == "approve":
+    #             rel.status = "Approve"
+    #             rel.save()
+    #         else:
+    #             rel.delete()
+    #
+    #         return HttpResponse()
+    #     else:
+    #         return super().post(request, *args, **kwargs)
+
+
+    def get_success_url(self):
+        return reverse('teacher-profile', kwargs={'pk': self.object.pk})
 
 
 class Login(LoginView):
@@ -52,7 +108,7 @@ def register(request):
 
 def get_registration_field_namings(request):
     if request.user.userstatus.userStatus == 'student':
-        helpers = USERPROFILE_FIELD_IDS_IN_FRONT
+        helpers = STUDENT_PROFILE_FIELD_IDS_IN_FRONT
     else:
         helpers = TEACHER_FIELD_IDS_IN_FRONT
 
@@ -77,7 +133,7 @@ def hash_tags(request):
                 HashTag.objects.filter(hashTag__in=data)
             )
 
-            request.user.userprofile.hashtags.add(
+            request.user.basicabstractprofile.hashtags.add(
                 *committed_and_saved_data
             )
 
@@ -100,7 +156,7 @@ def complete_user_registration(request, pk):  # User's Primary key
     user_status = UserStatus.objects.get(user=request.user).userStatus
 
     if user_status == 'student':
-        form = UserProfileForm
+        form = StudentProfileForm
 
     else:
         form = TeacherProfileForm

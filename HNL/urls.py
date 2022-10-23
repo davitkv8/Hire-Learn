@@ -20,7 +20,9 @@ from django.contrib.auth.views import LogoutView
 
 from blog.views import main_view
 from users.views import Login, register,\
-    complete_user_registration, hash_tags, get_registration_field_namings, string_matcher
+    complete_user_registration, hash_tags,\
+    get_registration_field_namings, string_matcher,\
+    UpdateTeacherProfileView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,4 +39,5 @@ urlpatterns = [
     path('hashTags/', hash_tags, name='hashTags'),
     path('get_field_namings/', get_registration_field_namings, name='fieldNamings'),
     path('stringMatcher/', string_matcher, name='stringMatcher'),
+    path('teacher/profile/<int:pk>/', UpdateTeacherProfileView.as_view(), name='userProfile'),
 ]

@@ -1,7 +1,7 @@
-from users.forms import UserProfileForm, TeacherProfileForm
+from users.forms import StudentProfileForm, TeacherProfileForm
 
-USERPROFILE_FIELD_IDS_IN_FRONT = {
-    field: "id_" + field for field in UserProfileForm.Meta.fields
+STUDENT_PROFILE_FIELD_IDS_IN_FRONT = {
+    field: "id_" + field for field in StudentProfileForm.Meta.fields
 }
 
 
