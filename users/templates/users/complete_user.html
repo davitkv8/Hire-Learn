@@ -33,13 +33,13 @@
          <div class="right">
                 <label for="id_birth_date">Birth date:</label>
                 {{ form.birth_date }}
-                <label for="id_lectures_per_week">Full name:</label>
+                <label for="id_full_name">Full name:</label>
                 {% render_field form.full_name value=full_name %}
-                <label for="id_lecture_price">Subject:</label>
-                {{ form.subject }}
-                <label for="id_platform">Monthly fee:</label>
+                <label for="id_subject">Subject:</label>
+                <input type="text" name="subject" required="" id="id_subject">
+                <label for="id_lecture_price">Monthly fee:</label>
                 {{ form.lecture_price }}
-                <label for="id_subject">Platform: (Primary)</label>
+                <label for="id_platform">Platform: (Primary)</label>
                 {{ form.platform }}
 
             <button type="submit" class="btn btn-success">Next ></button>

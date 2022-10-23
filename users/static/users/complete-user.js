@@ -37,8 +37,7 @@ function onFormSubmit(event) {
 
     for (const [key, value] of Object.entries(fields)) {
           console.log(value);
-          formData.append(`${key}`, document.getElementById(`${value}`).value);
-          console.log(document.getElementById(`${value}`));
+          formData.append(`${key}`, document.getElementById(`${value}`).value);;
         }
 
     var xhr=new XMLHttpRequest();

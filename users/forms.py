@@ -28,7 +28,7 @@ class TeacherProfileForm(forms.ModelForm):
     class Meta:
         model = TeachersProfile
         fields = ['birth_date', 'full_name', 'lecture_price',
-                  'description', 'platform', 'image', 'subject']
+                  'description', 'platform', 'subject']
         widgets = {
             'birth_date': forms.DateInput(attrs={'required': 'required', 'type': 'date'}),
             'description': forms.Textarea(attrs={"style": "resize: none"})
