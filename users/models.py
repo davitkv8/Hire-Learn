@@ -4,9 +4,12 @@ from django.core.validators import MaxValueValidator
 from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 
 
-class UserImage(models.Model):
-    userImage = models.ImageField(blank=False, null=True,
-                                  default='default.png', upload_to='teacher_profile_images')
+class Image(models.Model):
+    image = models.ImageField(blank=False, null=True,
+                              default='default.png', upload_to='teacher_profile_images')
+
+    def __repr__(self):
+        return f"{self.image}"
 
 
 class HashTag(models.Model):
@@ -40,7 +43,7 @@ class UserStatus(models.Model):
 class UserProfile(models.Model):
     description = models.TextField(blank=False, null=True, max_length=6000)
     hashtags = models.ManyToManyField(HashTag)
-    image = models.OneToOneField(UserImage, on_delete=models.SET_NULL, null=True)
+    image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=False)
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
 

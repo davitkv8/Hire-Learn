@@ -11,7 +11,7 @@ from django.urls import reverse
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, UserProfileForm
 from .namings import USERPROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT
-from users.models import UserStatus, TeachersProfile, UserImage, UserProfile, HashTag
+from users.models import UserStatus, TeachersProfile, Image, UserProfile, HashTag
 from .helpers import parse_values_from_lists_when_ajax_resp, validate_image
 
 
@@ -111,7 +111,7 @@ def complete_user_registration(request, pk):  # User's Primary key
         data['user'] = request.user
 
         if validate_image(request.FILES['file1']):
-            image_obj = UserImage.objects.create(userImage=request.FILES['file1'])
+            image_obj = Image.objects.create(image=request.FILES['file1'])
             data['image'] = image_obj
 
         form.Meta.model.objects.create(**data)
