@@ -39,5 +39,5 @@ urlpatterns = [
     path('hashTags/', hash_tags, name='hashTags'),
     path('get_field_namings/', get_registration_field_namings, name='fieldNamings'),
     path('stringMatcher/', string_matcher, name='stringMatcher'),
-    path('teacher/profile/<int:pk>/', UpdateTeacherProfileView.as_view(), name='userProfile'),
+    path('user/profile/<int:pk>/', UpdateTeacherProfileView.as_view(), name='userProfile'),
 ]

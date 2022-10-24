@@ -25,7 +25,7 @@
     {% if hasTimeTable == None %}
     <div class="alert alert-warning" role="alert">
       You have not set a time table yet. If you want to set it right now follow the
-        <a href="{% url 'time_table' request.user.pk%}" class="alert-link">link</a>.
+{#        <a href="{% url 'time_table' request.user.pk%}" class="alert-link">link</a>.#}
     </div>
     {% endif %}
 
@@ -88,7 +88,7 @@
                     {% if request.user == object.user %}
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                        <h6><a style="text-decoration: none; margin-left: 100px;" target="_blank" href="{% url 'time_table' request.user.pk%}">
+{#                        <h6><a style="text-decoration: none; margin-left: 100px;" target="_blank" href="{% url 'time_table' request.user.pk%}">#}
                             See time table</a></h6>
                         <span class="text-secondary"></span>
                       </li>
@@ -233,7 +233,7 @@
             console.log(user.itemid)
             $.ajax(
                     {
-                        url: "{% url 'teacher-profile' request.user.teacherprofile.pk%}",
+                        url: "{% url 'userProfile' request.user.pk%}",
                         type: 'POST',
                         data: {
                             type: "verify_request",
@@ -251,7 +251,7 @@
 
           $.ajax(
                     {
-                        url: "{% url 'teacher-profile' request.user.teacherprofile.pk%}",
+                        url: "{% url 'userProfile' request.user.pk%}",
                         type: 'POST',
                         data: {
                             type: arg.value,

@@ -12,24 +12,27 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
-from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT
+from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT,\
+    VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
 from users.models import UserStatus, TeacherProfile, Image, StudentProfile, HashTag
-from .helpers import parse_values_from_lists_when_ajax_resp, validate_image, create_foreign_keys_where_necessary
+from .helpers import parse_values_from_lists_when_ajax_resp,\
+    validate_image, create_foreign_keys_where_necessary, get_request_user_profile_model
 
 
 class UpdateTeacherProfileView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
-    model = TeacherProfile
     template_name = 'users/profile.html'
     context_object_name = 'object'
-    fields = ['full_name', 'lecture_price', 'description',
-              'platform', 'subject']
+
+    def dispatch(self, request, *args, **kwargs):
+        self._specify_fields_data_for_front()
+
+        return super(UpdateTeacherProfileView, self).dispatch(
+            request, *args, **kwargs)
 
     def get_queryset(self):
         pk = self.kwargs.get(self.pk_url_kwarg)
-
-    def get(self, request, *args, **kwargs):
-        print("HERE")
-        pass
+        queryset = self._user_profile_model().objects.filter(pk=pk)
+        return queryset
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -40,32 +43,46 @@ class UpdateTeacherProfileView(UserPassesTestMixin, LoginRequiredMixin, UpdateVi
     #     return context
 
     def test_func(self):
-        profile = self.get_object()
-        return self.request.user == profile.user
+        return self.request.user
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        # form.instance.user = self.request.user
         return super().form_valid(form)
 
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
-    # def post(self, request, *args, **kwargs):
-    #     if request.is_ajax():
-    #         if request.POST["type"] == "verify_request":
-    #             email_verification(self.request, request.POST["user"])
-    #             return HttpResponse()
-    #
-    #         rel = Relationship.objects.get(receiver=request.user.teachersprofile,
-    #                                        sender=request.POST["user"], status="send")
-    #         if request.POST["type"] == "approve":
-    #             rel.status = "Approve"
-    #             rel.save()
-    #         else:
-    #             rel.delete()
-    #
-    #         return HttpResponse()
-    #     else:
-    #         return super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        # if request.is_ajax():
+        #     if request.POST["type"] == "verify_request":
+        #         email_verification(self.request, request.POST["user"])
+        #         return HttpResponse()
+        #
+        #     rel = Relationship.objects.get(receiver=request.user.teachersprofile,
+        #                                    sender=request.POST["user"], status="send")
+        #     if request.POST["type"] == "approve":
+        #         rel.status = "Approve"
+        #         rel.save()
+        #     else:
+        #         rel.delete()
+        #
+        #     return HttpResponse()
+        # else:
+        return super().post(request, *args, **kwargs)
 
+    def _user_profile_model(self):
+        return get_request_user_profile_model(self.request)
+
+    def _specify_fields_data_for_front(self):
+        self.fields = [
+            field for field in VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
+            if VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE[field]['editable']
+        ]
+
+        self.readonly_fields = [
+            field for field in VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
+            if not VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE[field]['editable']
+        ]
 
     def get_success_url(self):
         return reverse('teacher-profile', kwargs={'pk': self.object.pk})

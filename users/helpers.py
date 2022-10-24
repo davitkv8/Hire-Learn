@@ -2,17 +2,29 @@
     THOSE FUNCTIONS ARE ADDED AS HELPER FUNCTIONS FOR CERTAIN CASES
 """
 import imghdr
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.fields.related import ForeignKey
 from django.shortcuts import redirect
 from django.urls import reverse
+
+from users.models import StudentProfile, TeacherProfile
 
 FIELDS_TO_BE_IGNORED = [
     'user_status',
 ]
 
 
-def get_request_user_profile_status(request):
-    return request.user.user_status.userStatus
+def get_request_user_profile_model(request):
+
+    abstract_profile_class = request.user.basicabstractprofile
+
+    # Just checking, if user has studentProfile or teacherProfile inheritance
+    # And getting appropriate model class (not instance!)
+    try:
+        return abstract_profile_class.studentprofile._meta.model
+
+    except ObjectDoesNotExist:
+        return abstract_profile_class.teacherprofile._meta.model
 
 
 def parse_values_from_lists_when_ajax_resp(obj):
