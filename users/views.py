@@ -31,7 +31,15 @@ class UpdateTeacherProfileView(UserPassesTestMixin, LoginRequiredMixin, UpdateVi
 
     def get_queryset(self):
         pk = self.kwargs.get(self.pk_url_kwarg)
-        queryset = self._user_profile_model().objects.filter(pk=pk)
+
+        queryset = self._user_profile_model().objects.filter(
+            user_id=pk
+        )
+
+        self.kwargs.update(
+            {self.pk_url_kwarg: queryset.first().pk}
+        )
+
         return queryset
 
     # def get_context_data(self, **kwargs):

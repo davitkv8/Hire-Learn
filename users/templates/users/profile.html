@@ -54,7 +54,7 @@
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
-                    <img src={{ object.image.url }} alt="Lecturer" class="rounded-circle" width="250">
+                    <img src="{% csrf_token %}" alt="Lecturer" class="rounded-circle" width="250">
                     <div class="mt-3">
                     </div>
                   </div>
@@ -181,10 +181,10 @@
                       <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment
                       </i>About Me</h6>
                         {% if request.user == object.user %}
-                            {% render_field form.description cols="85" rows="11" style="border: none; resize: none; outline:none; overflow-x: hidden; overflow-y: auto;  text-align: center" %}
+                            {% render_field form.description cols="85" rows="11" style="width: 690px; border: none; resize: none; outline:none; overflow-x: hidden; overflow-y: auto;  text-align: center" %}
                         {% else %}
                             <textarea cols="85" rows="11"
-                                      style="width: 699px; border: none; resize: none; outline:none;
+                                      style="width: 690px; border: none; resize: none; outline:none;
                                       overflow-x: hidden; overflow-y: auto;  text-align: center"; id="textarea-description">
                                       {{ object.description }} </textarea>
                         {% endif %}

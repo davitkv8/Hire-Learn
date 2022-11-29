@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from django.conf import settings
 from django.contrib.auth.views import LogoutView
+from django.conf.urls.static import static
 
 from blog.views import main_view
 from users.views import Login, register,\
@@ -40,4 +41,4 @@ urlpatterns = [
     path('get_field_namings/', get_registration_field_namings, name='fieldNamings'),
     path('stringMatcher/', string_matcher, name='stringMatcher'),
     path('user/profile/<int:pk>/', UpdateTeacherProfileView.as_view(), name='userProfile'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
