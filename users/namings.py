@@ -32,9 +32,34 @@ VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE = {
 
 VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
 
-    "description": {
-        "name_in_front": "Description",
+    "full_name": {
+        "name_in_front": "Full Name",
         "editable": True,
+    },
+
+    "email": {
+        "name_in_front": "E-mail",
+        "editable": False,
+    },
+
+    "birth_date": {
+        "name_in_front": "Birth Date",
+        "editable": True,
+    },
+
+    "subject": {
+        "name_in_front": "Subject",
+        "editable": True,
+    },
+
+    "lecture_price": {
+        "name_in_front": "Lecture Price (Per hour)",
+        "editable": True,
+    },
+
+    "platform": {
+        "name_in_front": "Platform",
+        "editable": False,
     },
 
     "hashTag": {
@@ -44,7 +69,7 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
 
     "image": {
         "name_in_front": "Profile Picture",
-        "editable": True,
+        "editable": False,
     },
 
     "record_creation_datetime": {
@@ -52,29 +77,9 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
         "editable": False,
     },
 
-    "birth_date": {
-        "name_in_front": "birth_date",
-        "editable": False,
-    },
-
-    "full_name": {
-        "name_in_front": "full_name",
-        "editable": False,
-    },
-
-    "lecture_price": {
-        "name_in_front": "lecture_price",
-        "editable": False,
-    },
-
-    "platform": {
-        "name_in_front": "platform",
-        "editable": False,
-    },
-
-    "subject": {
-        "name_in_front": "subject",
-        "editable": False,
+    "description": {
+        "name_in_front": "Description",
+        "editable": True,
     },
 
 }

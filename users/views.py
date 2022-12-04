@@ -45,7 +45,7 @@ def get_user_profile_data(user):
             value = getattr(value, field).url
 
         if type(value) in [datetime, date, time]:
-            value = value.strftime("%Y/%m/%d")
+            value = value.strftime("%Y-%m-%d")
 
         fields[field]['value'] = value
         field_info_with_value.append({field: fields[field]})
