@@ -134,7 +134,7 @@ function register() {
 
     $.ajax({
     type: "POST",
-    url: url + "/hashTags/",
+    url: url + "/hashTag/",
     data: data,
     success: function(result){
         window.location.href = result.success;

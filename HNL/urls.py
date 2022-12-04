@@ -20,10 +20,12 @@ from django.contrib.auth.views import LogoutView
 from django.conf.urls.static import static
 
 from blog.views import main_view
+
 from users.views import Login, register,\
     complete_user_registration, hash_tags,\
     get_registration_field_namings, string_matcher,\
-    UpdateTeacherProfileView
+    user_profile_view, get_user_profile_data
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,8 +39,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
 
     path('complete/profile/<int:pk>/', complete_user_registration, name='complete-user'),
-    path('hashTags/', hash_tags, name='hashTags'),
+    path('hashTag/', hash_tags, name='hashTag'),
     path('get_field_namings/', get_registration_field_namings, name='fieldNamings'),
     path('stringMatcher/', string_matcher, name='stringMatcher'),
-    path('user/profile/<int:pk>/', UpdateTeacherProfileView.as_view(), name='userProfile'),
+    path('user/profile/<int:user_pk>/', user_profile_view, name='userProfile'),
+    path('user/profile_data/', get_user_profile_data, name='profile_data'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

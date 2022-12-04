@@ -8,23 +8,51 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from users.models import StudentProfile, TeacherProfile
+from users.namings import (
+            VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE,
+            VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE
+        )
 
 FIELDS_TO_BE_IGNORED = [
     'user_status',
 ]
 
 
-def get_request_user_profile_model(request):
+def get_request_user_profile_model_and_fields(user):
 
-    abstract_profile_class = request.user.basicabstractprofile
+    abstract_profile_class = user.basicabstractprofile
 
     # Just checking, if user has studentProfile or teacherProfile inheritance
     # And getting appropriate model class (not instance!)
     try:
-        return abstract_profile_class.studentprofile._meta.model
+        model_class = abstract_profile_class.studentprofile._meta.model
+        front_fields = VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
+
+        profile_obj = getattr(
+            user.basicabstractprofile,
+            model_class.__name__.lower()
+        )
+
+        return {
+            "model_class": model_class,
+            "front_fields": front_fields,
+            "profile_obj": profile_obj
+        }
 
     except ObjectDoesNotExist:
-        return abstract_profile_class.teacherprofile._meta.model
+        model_class = abstract_profile_class.teacherprofile._meta.model
+        front_fields = VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE
+
+        profile_obj = getattr(
+            user.basicabstractprofile,
+            model_class.__name__.lower()
+        )
+
+        return {
+            "model_class": model_class,
+            "front_fields": front_fields,
+            "profile_obj": profile_obj
+        }
 
 
 def parse_values_from_lists_when_ajax_resp(obj):

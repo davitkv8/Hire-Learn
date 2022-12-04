@@ -42,7 +42,7 @@ class UserStatus(models.Model):
 
 class BasicAbstractProfile(models.Model):
     description = models.TextField(blank=False, null=True, max_length=6000)
-    hashtags = models.ManyToManyField(HashTag)
+    hashTag = models.ManyToManyField(HashTag)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=False)
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
@@ -63,7 +63,6 @@ class BasicAbstractProfile(models.Model):
 
 
 class StudentProfile(BasicAbstractProfile):
-
     def __repr__(self):
         return f"{self.user.username}"
 

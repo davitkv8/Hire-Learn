@@ -6,94 +6,151 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.views.generic import UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from datetime import datetime, time, date
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
-from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT, TEACHER_FIELD_IDS_IN_FRONT,\
-    VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
+from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT,\
+    TEACHER_FIELD_IDS_IN_FRONT, M2M_FIELDS, FOREIGN_KEY_FIELDS
 from users.models import UserStatus, TeacherProfile, Image, StudentProfile, HashTag
 from .helpers import parse_values_from_lists_when_ajax_resp,\
-    validate_image, create_foreign_keys_where_necessary, get_request_user_profile_model
+    validate_image, create_foreign_keys_where_necessary,\
+    get_request_user_profile_model_and_fields
 
 
-class UpdateTeacherProfileView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
-    template_name = 'users/profile.html'
-    context_object_name = 'object'
+def get_user_profile_data(user):
+    data = get_request_user_profile_model_and_fields(user)
 
-    def dispatch(self, request, *args, **kwargs):
-        self._specify_fields_data_for_front()
+    user_profile_obj = data['profile_obj']
+    fields = data['front_fields']
 
-        return super(UpdateTeacherProfileView, self).dispatch(
-            request, *args, **kwargs)
+    field_info_with_value = []
 
-    def get_queryset(self):
-        pk = self.kwargs.get(self.pk_url_kwarg)
+    for field in fields:
 
-        queryset = self._user_profile_model().objects.filter(
-            user_id=pk
-        )
+        try:
+            value = getattr(user_profile_obj, field)
 
-        self.kwargs.update(
-            {self.pk_url_kwarg: queryset.first().pk}
-        )
+        except AttributeError:
+            value = getattr(user, field)
 
-        return queryset
+        if field in M2M_FIELDS:
+            value = [i for i in value.values_list(field, flat=True)]
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['friendRequest'] = Relationship.objects.filter(receiver=self.object, status='send').all()
-    #     context['hasTimeTable'] = TimeTable.objects.filter(user=self.object.user).first()
-    #     context['feedbacks'] = self.object.feedback.all().order_by('date')[:10]
-    #     # context['verification_request'] = email_verification(request=self.request, pk=self.request.user.pk)
-    #     return context
+        if field in FOREIGN_KEY_FIELDS:
+            value = getattr(value, field)
 
-    def test_func(self):
-        return self.request.user
+        if field == "image":
+            value = getattr(value, field).url
 
-    def form_valid(self, form):
-        # form.instance.user = self.request.user
-        return super().form_valid(form)
+        if type(value) in [datetime, date, time]:
+            value = value.strftime("%Y/%m/%d")
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        fields[field]['value'] = value
+        field_info_with_value.append({field: fields[field]})
 
-    def post(self, request, *args, **kwargs):
-        # if request.is_ajax():
-        #     if request.POST["type"] == "verify_request":
-        #         email_verification(self.request, request.POST["user"])
-        #         return HttpResponse()
-        #
-        #     rel = Relationship.objects.get(receiver=request.user.teachersprofile,
-        #                                    sender=request.POST["user"], status="send")
-        #     if request.POST["type"] == "approve":
-        #         rel.status = "Approve"
-        #         rel.save()
-        #     else:
-        #         rel.delete()
-        #
-        #     return HttpResponse()
-        # else:
-        return super().post(request, *args, **kwargs)
+    return json.dumps(field_info_with_value)
 
-    def _user_profile_model(self):
-        return get_request_user_profile_model(self.request)
 
-    def _specify_fields_data_for_front(self):
-        self.fields = [
-            field for field in VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
-            if VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE[field]['editable']
-        ]
+def user_profile_view(request, user_pk):
 
-        self.readonly_fields = [
-            field for field in VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
-            if not VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE[field]['editable']
-        ]
+    context = {
 
-    def get_success_url(self):
-        return reverse('teacher-profile', kwargs={'pk': self.object.pk})
+    }
+
+    if request.method == "GET":
+        user = User.objects.get(pk=user_pk)
+        # user_profile_model = get_request_user_profile_model(user)
+        context['fields_data'] = get_user_profile_data(user)
+
+    return render(request, "users/profile.html", context=context)
+
+
+# class UpdateTeacherProfileView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
+#     template_name = 'users/profile.html'
+#     # context_object_name = 'object'
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         self._specify_fields_data_for_front()
+#
+#         return super(UpdateTeacherProfileView, self).dispatch(
+#             request, *args, **kwargs)
+#
+#     def get_queryset(self):
+#         pk = self.kwargs.get(self.pk_url_kwarg)
+#
+#         queryset = self._user_profile_model().objects.filter(
+#             user_id=pk
+#         )
+#
+#         self.kwargs.update(
+#             {self.pk_url_kwarg: queryset.first().pk}
+#         )
+#
+#         return queryset
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['fields_data'] = get_user_profile_data(self.object)
+#
+#         # context['friendRequest'] = Relationship.objects.filter(receiver=self.object, status='send').all()
+#         # context['hasTimeTable'] = TimeTable.objects.filter(user=self.object.user).first()
+#         # context['feedbacks'] = self.object.feedback.all().order_by('date')[:10]
+#         # context['verification_request'] = email_verification(request=self.request, pk=self.request.user.pk)
+#         return context
+#
+#     def test_func(self):
+#         return self.request.user
+#
+#     def form_valid(self, form):
+#         # form.instance.user = self.request.user
+#         return super().form_valid(form)
+#
+#     def get(self, request, *args, **kwargs):
+#
+#         return super().get(request, *args, **kwargs)
+#
+#     def post(self, request, *args, **kwargs):
+#         # if request.is_ajax():
+#         #     if request.POST["type"] == "verify_request":
+#         #         email_verification(self.request, request.POST["user"])
+#         #         return HttpResponse()
+#         #
+#         #     rel = Relationship.objects.get(receiver=request.user.teachersprofile,
+#         #                                    sender=request.POST["user"], status="send")
+#         #     if request.POST["type"] == "approve":
+#         #         rel.status = "Approve"
+#         #         rel.save()
+#         #     else:
+#         #         rel.delete()
+#         #
+#         #     return HttpResponse()
+#         # else:
+#         return super().post(request, *args, **kwargs)
+#
+#     def _user_profile_model(self):
+#         return get_request_user_profile_model(self.request)
+#
+#     def _specify_fields_data_for_front(self):
+#         fields_info = self._user_profile_model().specific_fields_for_front()
+#         fields_info = {
+#             key: value for key, value in fields_info.items()
+#             if not fields_info[key].get('non_related_class')
+#            }
+#
+#         self.fields = [
+#             field for field in fields_info
+#             if fields_info[field]['editable']
+#         ]
+#
+#         self.readonly_fields = [
+#             field for field in fields_info
+#             if not fields_info[field]['editable']
+#         ]
+#
+#     def get_success_url(self):
+#         return reverse('teacher-profile', kwargs={'pk': self.object.pk})
 
 
 class Login(LoginView):
@@ -158,7 +215,7 @@ def hash_tags(request):
                 HashTag.objects.filter(hashTag__in=data)
             )
 
-            request.user.basicabstractprofile.hashtags.add(
+            request.user.basicabstractprofile.hashTag.add(
                 *committed_and_saved_data
             )
 
@@ -199,7 +256,7 @@ def complete_user_registration(request, pk):  # User's Primary key
 
         form.Meta.model.objects.create(**data)
 
-        url = reverse('hashTags')
+        url = reverse('hashTag')
 
         return JsonResponse(status=302, data={'success': url})
 

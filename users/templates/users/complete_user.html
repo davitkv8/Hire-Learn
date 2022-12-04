@@ -11,7 +11,7 @@
       {% csrf_token %}
       {{ request.user.id|json_script:"user_id" }}
       <div id="login-box">
-      {% block hashTags %} {% endblock hashTags %}
+      {% block hashTag %} {% endblock hashTag %}
       <form enctype="multipart/form-data" onsubmit="onFormSubmit(event)">
         {% if request.user.userstatus.userStatus == 'teacher' %}
          <div class="left">
