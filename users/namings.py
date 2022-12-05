@@ -15,7 +15,7 @@ VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE = {
 
     "hashTag": {
         "name_in_front": "Tags",
-        "editable": True,
+        "editable": False,
     },
 
     "image": {
@@ -47,8 +47,8 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
         "editable": True,
     },
 
-    "subject": {
-        "name_in_front": "Subject",
+    "title": {
+        "name_in_front": "Title",
         "editable": True,
     },
 
@@ -59,12 +59,12 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
 
     "platform": {
         "name_in_front": "Platform",
-        "editable": False,
+        "editable": True,
     },
 
     "hashTag": {
         "name_in_front": "Tags",
-        "editable": True,
+        "editable": False,
     },
 
     "image": {
@@ -97,7 +97,7 @@ TEACHER_FIELD_IDS_IN_FRONT = {
 
 FOREIGN_KEY_FIELDS = {
     "user_status": UserStatus,
-    "subject": Subject,
+    "title": Title,
 }
 
 M2M_FIELDS = {

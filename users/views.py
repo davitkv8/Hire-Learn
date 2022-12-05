@@ -19,7 +19,7 @@ from .helpers import parse_values_from_lists_when_ajax_resp,\
     get_request_user_profile_model_and_fields
 
 
-def get_user_profile_data(user):
+def get_user_profile_data(user: User):
     data = get_request_user_profile_model_and_fields(user)
 
     user_profile_obj = data['profile_obj']
@@ -59,10 +59,20 @@ def user_profile_view(request, user_pk):
 
     }
 
+    user = User.objects.get(pk=user_pk)
+
     if request.method == "GET":
-        user = User.objects.get(pk=user_pk)
-        # user_profile_model = get_request_user_profile_model(user)
         context['fields_data'] = get_user_profile_data(user)
+
+    if request.method == "POST":
+        data = parse_values_from_lists_when_ajax_resp(dict(request.POST))
+        profile_model = get_request_user_profile_model_and_fields(user)['model_class']
+        data = create_foreign_keys_where_necessary(profile_model, data)
+
+        profile_model.objects.filter(user=user).update(
+            **data
+        )
+
 
     return render(request, "users/profile.html", context=context)
 
@@ -202,7 +212,8 @@ def hash_tags(request):
     if request.method == "POST":
 
         key = "hashTag"
-        data = request.POST.getlist(key + "[]")
+        request_data = request.POST
+        data = request_data.getlist(key + "[]")
         items = [HashTag(hashTag=hash_tag) for hash_tag in data]
 
         try:

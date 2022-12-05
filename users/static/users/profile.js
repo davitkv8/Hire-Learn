@@ -1,13 +1,14 @@
 const user_id = JSON.parse(document.getElementById('user_id').textContent);
 const user_fields_div_rows = ['full_name', 'birth_date', 'email',
-        'lecture_price', 'platform', 'hashTag'];
+        'lecture_price', 'platform', 'hashTag', "title"];
 
-const user_feedback_fields = ["all_students", "feedbacks", "rating", "record_creation_datetime"]
+const user_feedback_fields = ["all_students", "feedbacks", "rating", "record_creation_datetime"];
+
+var editable_fields = [];
 
 
 function email_verification(user){
 
-            console.log(user.itemid)
             $.ajax(
                     {
                         url: "{% url 'userProfile' request.user.pk%}",
@@ -45,8 +46,6 @@ function email_verification(user){
 function draw_profile_page(){
     const fields_data = JSON.parse(document.getElementById('fields_data').textContent);
 
-    console.log(fields_data);
-
     const obj = JSON.parse(fields_data);
 
     const user_fields_div = document.getElementById('user-fields');
@@ -55,7 +54,9 @@ function draw_profile_page(){
 
         let key = Object.keys(item);
 
-        // console.log(key[0]);
+        if (item[key]['editable']) {
+                editable_fields.push(key[0]);
+            }
 
         if(user_fields_div_rows.includes(key[0])) {
 
@@ -132,8 +133,7 @@ function draw_profile_page(){
             text_area.cols = 85;
             text_area.rows = 11;
             text_area.textContent = item[key]['value'];
-
-            console.log(item[key]['value'])
+            text_area.id = key[0];
 
             description_div.appendChild(text_area);
 
@@ -142,6 +142,42 @@ function draw_profile_page(){
     });
 
 }
+
+
+function send_changes(data){
+  data['csrfmiddlewaretoken'] = $('[name=csrfmiddlewaretoken]').val();
+
+  $.ajax({
+    type: "POST",
+    // url: `user/profile/${user_id}/`,
+    data: data,
+    success: function(result){
+    }
+  });
+}
+
+
+
+function save_changes() {
+    let column_row_pair = {};
+
+    editable_fields.forEach(function (field) {
+        let row = document.getElementById(field);
+
+        try {
+            column_row_pair[field] = row.value;
+        }
+        catch (error) {
+            console.log(field);
+            console.log(error);
+        }
+
+    });
+
+    send_changes(column_row_pair);
+
+}
+
 
 
 draw_profile_page();

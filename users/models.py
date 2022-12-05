@@ -21,11 +21,11 @@ class HashTag(models.Model):
         return f"{self.hashTag}"
 
 
-class Subject(models.Model):
-    subject = models.CharField(max_length=55)
+class Title(models.Model):
+    title = models.CharField(max_length=55)
 
     def __repr__(self):
-        return f"{self.subject}"
+        return f"{self.title}"
 
 
 class UserStatus(models.Model):
@@ -81,7 +81,7 @@ class TeacherProfile(BasicAbstractProfile):
     )
     platform = models.CharField(blank=False, null=False, max_length=55, choices=platform_choices)
 
-    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL,
+    title = models.ForeignKey(Title, on_delete=models.SET_NULL,
                                 blank=False, null=True, max_length=55, default='')
 
     def __str__(self):

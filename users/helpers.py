@@ -55,7 +55,7 @@ def get_request_user_profile_model_and_fields(user):
         }
 
 
-def parse_values_from_lists_when_ajax_resp(obj):
+def parse_values_from_lists_when_ajax_resp(obj: dict) -> dict:
     return {
         key.replace("[]", ""): value[0]
         for key, value in obj.items() if key != 'csrfmiddlewaretoken'

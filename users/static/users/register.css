@@ -46,7 +46,7 @@ h1 {
 
 input[type="text"], input[type="number"], input[type="password"],
 input[type="file"], input[type="date"], input[type="email"],
-select[name="location"], select[name="platform"], select[name="subject"],
+select[name="location"], select[name="platform"], select[name="title"],
 textarea[name="description"], button[type="submit"] {
   display: block;
   box-sizing: border-box;
