@@ -35,51 +35,61 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
     "full_name": {
         "name_in_front": "Full Name",
         "editable": True,
+        "field_type": "string",
     },
 
     "email": {
         "name_in_front": "E-mail",
         "editable": False,
+        "field_type": "string",
     },
 
     "birth_date": {
         "name_in_front": "Birth Date",
         "editable": True,
+        "field_type": "date",
     },
 
     "title": {
         "name_in_front": "Title",
         "editable": True,
+        "field_type": "string",
     },
 
     "lecture_price": {
         "name_in_front": "Lecture Price (Per hour)",
         "editable": True,
+        "field_type": "int",
     },
 
     "platform": {
         "name_in_front": "Platform",
         "editable": True,
+        "field_type": "selection",
     },
 
     "hashTag": {
         "name_in_front": "Tags",
         "editable": False,
+        "field_type": "selection",
     },
 
     "image": {
         "name_in_front": "Profile Picture",
         "editable": False,
+        "field_type": "string",
     },
 
     "record_creation_datetime": {
         "name_in_front": "Since",
         "editable": False,
+        "field_type": "datetime",
     },
 
     "description": {
         "name_in_front": "Description",
         "editable": True,
+        "field_type": "string",
     },
 
 }
