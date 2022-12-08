@@ -40,6 +40,21 @@ class UserStatus(models.Model):
         return f"{self.userStatus}"
 
 
+class Platform(models.Model):
+    platform_choices = (
+        ('', ''),
+        ('Google Meet', 'Google Meet'),
+        ('Microsoft Teams', 'Microsoft Teams'),
+        ('Zoom', 'Zoom'),
+        ('Facebook Messenger', 'Facebook Messenger'),
+        ('Other', 'Other')
+    )
+    platform = models.CharField(blank=False, null=False, max_length=55, choices=platform_choices)
+
+    def __repr__(self):
+        return f"{self.platform}"
+
+
 class BasicAbstractProfile(models.Model):
     description = models.TextField(blank=False, null=True, max_length=6000)
     hashTag = models.ManyToManyField(HashTag)
@@ -70,19 +85,16 @@ class StudentProfile(BasicAbstractProfile):
 class TeacherProfile(BasicAbstractProfile):
     birth_date = models.DateField(blank=False, null=False)
     full_name = models.CharField(blank=False, null=False, max_length=55)
-    lecture_price = models.PositiveIntegerField(blank=False, null=False, validators=[MaxValueValidator(10000)])
-    platform_choices = (
-        ('', ''),
-        ('Google Meet', 'Google Meet'),
-        ('Microsoft Teams', 'Microsoft Teams'),
-        ('Zoom', 'Zoom'),
-        ('Facebook Messenger', 'Facebook Messenger'),
-        ('Other', 'Other')
+    lecture_price = models.FloatField(
+        blank=False, null=False, validators=[MaxValueValidator(10000)]
     )
-    platform = models.CharField(blank=False, null=False, max_length=55, choices=platform_choices)
 
     title = models.ForeignKey(Title, on_delete=models.SET_NULL,
-                                blank=False, null=True, max_length=55, default='')
+                              blank=False, null=True, max_length=55, default='')
+
+    platform = models.OneToOneField(Platform, on_delete=models.SET_NULL,
+                                    blank=False, null=True, max_length=55)
+
 
     def __str__(self):
         return f"{self.full_name}'s Profile."

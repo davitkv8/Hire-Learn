@@ -76,6 +76,7 @@ def create_foreign_keys_where_necessary(model_class, data):
             continue
 
         if type(field) == ForeignKey:
+            print(field)
 
             instance, created = field.remote_field.model.objects.get_or_create(
                 **{field_name: data[field_name]},
