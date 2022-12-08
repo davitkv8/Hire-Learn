@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+{#    <link#}
+{#      rel="stylesheet"#}
+{#      href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"#}
+{#    />#}
     <link rel="stylesheet" href="{% static 'users/profile.css' %}">
 {% endblock link %}
 
@@ -66,26 +71,16 @@
                 </ul>
               </div>
                 <div class="card mt-3">
-{#                    {% if request.user == object.user %}#}
-{#                    <ul class="list-group list-group-flush">#}
-{#                      <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">#}
-{#                        <h6><a style="text-decoration: none; margin-left: 100px;" target="_blank" href="{% url 'time_table' request.user.pk%}">#}
-{#                            See time table</a></h6>#}
-{#                        <span class="text-secondary"></span>#}
-{#                      </li>#}
-{#                    </ul>#}
-
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap" style="display:block; margin: 0 auto;">
                             <button id="save-btn" type="button" onclick="save_changes()" class="btn btn-success" style="position: center">Save for any changes
                             </button>
                       </li>
                     </ul>
-{#                    {% else %}#}
-                      <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                             <button type="submit" class="btn btn-danger" style="margin-left: 5px; width: 350px">BOOK</button>
-                      </li>
-{#                    {% endif %}#}
+                    </li>
                 </div>
 
             </div>
@@ -96,16 +91,12 @@
 {#                    <div class="col-sm-3">#}
 {#                      <h6 class="mb-0">Full Name</h6>#}
 {#                    </div>#}
-{#                    <div class="col-sm-9 text-secondary">#}
-{#                      {% if request.user == object.user %}#}
-{#                          {{ fields }}#}
-{#                        {% render_field form.full_name style="border: none; outline: none" %}#}
-{#                      {% else %}#}
-{#                         <span>{{ fields.full_name }}</span>#}
-{#                      {% endif %}#}
+{#                    <div id="autocomplete" class="autocomplete">#}
+{#                      <input class="autocomplete-input"/>#}
+{#                      <ul class="autocomplete-result-list" style="border: none"></ul>#}
 {#                    </div>#}
 {#                  </div>#}
-{#                  <hr>#}
+                  <hr>
 {#                  <div class="row">#}
 {#                    <div class="col-sm-3">#}
 {#                      <h6 class="mb-0">Email</h6>#}
@@ -199,8 +190,33 @@
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript"></script>
-
 <script src="{% static 'users/profile.js' %}"></script>
+
+
+<script>
+
+    function parseResponse(obj){
+        let names = []
+        obj.forEach(item => {
+            names.push(item['name']);
+        })
+        return names;
+    }
+
+    new Autocomplete('#autocomplete', {
+        search : input => {
+            const url = `/user/auto-complete/?search=${input}`;
+            return new Promise(resolve => {
+                fetch(url)
+                    .then(response=>response.json())
+                    .then(data=>{
+                    data = parseResponse(data.payload);
+                    resolve(data);
+                })
+            })
+        },
+    })
+</script>
 
 {% endblock content %}
 

@@ -24,7 +24,7 @@ from blog.views import main_view
 from users.views import Login, register,\
     complete_user_registration, hash_tags,\
     get_registration_field_namings, string_matcher,\
-    user_profile_view, get_user_profile_data
+    user_profile_view, get_user_profile_data, get_names
 
 
 urlpatterns = [
@@ -44,5 +44,6 @@ urlpatterns = [
     path('stringMatcher/', string_matcher, name='stringMatcher'),
     path('user/profile/<int:user_pk>/', user_profile_view, name='userProfile'),
     path('user/profile_data/', get_user_profile_data, name='profile_data'),
+    path('user/auto-complete/', get_names, name='auto-complete')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

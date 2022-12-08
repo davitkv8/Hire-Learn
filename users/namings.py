@@ -71,7 +71,7 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
     "hashTag": {
         "name_in_front": "Tags",
         "editable": False,
-        "field_type": "selection",
+        "field_type": "string",
     },
 
     "image": {

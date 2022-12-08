@@ -19,6 +19,26 @@ from .helpers import parse_values_from_lists_when_ajax_resp,\
     get_request_user_profile_model_and_fields
 
 
+@login_required
+def get_names(request):
+    search = request.GET.get('search')
+    payload = []
+
+    if search:
+        objs = TeacherProfile.objects.filter(platform__startswith=search)
+        for obj in objs:
+            payload.append(
+                {'name': obj.platform}
+            )
+    print(payload)
+    return HttpResponse(
+        json.dumps({
+            'status': True,
+            'payload': payload,
+        })
+    )
+
+
 def get_user_profile_data(user: User):
     data = get_request_user_profile_model_and_fields(user)
 

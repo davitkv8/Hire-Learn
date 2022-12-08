@@ -1,5 +1,5 @@
 const user_id = JSON.parse(document.getElementById('user_id').textContent);
-const user_fields_div_rows = ['full_name', 'birth_date', 'email',
+const user_fields_div_rows = ["full_name", 'birth_date', 'email',
         'lecture_price', 'platform', 'hashTag', "title"];
 
 const user_feedback_fields = ["all_students", "feedbacks", "rating", "record_creation_datetime"];
@@ -71,11 +71,32 @@ function draw_profile_page(){
             column_name.className = "mb-0";
             column_name.textContent = item[key]['name_in_front'];
 
-            let column_value_input = document.createElement("input");
-            column_value_input.className = "col-sm-9 text-secondary";
-            column_value_input.style = "border: none; outline: none; background: none";
-            column_value_input.value = item[key]['value'];
-            column_value_input.id = key[0];
+            if(item[key]['field_type'] === 'selection') {
+                var column_value_input = document.createElement("div");
+                column_value_input.className = "autocomplete";
+                column_value_input.id = "autocomplete";
+
+                let autoCompleteInput = document.createElement("input");
+                autoCompleteInput.className = "autocomplete-input";
+                autoCompleteInput.value = item[key]['value'];
+                autoCompleteInput.id = key[0];
+
+                let choicesUl = document.createElement("ul");
+                choicesUl.className = "autocomplete-result-list";
+                choicesUl.style = "border: none;";
+
+                column_value_input.appendChild(autoCompleteInput);
+                column_value_input.appendChild(choicesUl);
+
+            }
+
+            else {
+                var column_value_input = document.createElement("input");
+                column_value_input.className = "col-sm-9 text-secondary";
+                column_value_input.style = "border: none; outline: none; background: none";
+                column_value_input.value = item[key]['value'];
+                column_value_input.id = key[0];
+            }
 
             if (!item[key]['editable']) {
                 column_value_input.disabled = true;
