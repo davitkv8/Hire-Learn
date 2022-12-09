@@ -11,6 +11,9 @@ class Image(models.Model):
     def __repr__(self):
         return f"{self.image}"
 
+    def __str__(self):
+        return f"Path on localhost : {self.image.url}"
+
 
 class HashTag(models.Model):
 
@@ -20,12 +23,18 @@ class HashTag(models.Model):
     def __repr__(self):
         return f"{self.hashTag}"
 
+    def __str__(self):
+        return self.hashTag
+
 
 class Title(models.Model):
     title = models.CharField(max_length=55)
 
     def __repr__(self):
         return f"{self.title}"
+
+    def __str__(self):
+        return self.title
 
 
 class UserStatus(models.Model):
@@ -53,6 +62,9 @@ class Platform(models.Model):
 
     def __repr__(self):
         return f"{self.platform}"
+
+    def __str__(self):
+        return self.platform
 
 
 class BasicAbstractProfile(models.Model):
@@ -92,9 +104,8 @@ class TeacherProfile(BasicAbstractProfile):
     title = models.ForeignKey(Title, on_delete=models.SET_NULL,
                               blank=False, null=True, max_length=55, default='')
 
-    platform = models.OneToOneField(Platform, on_delete=models.SET_NULL,
-                                    blank=False, null=True, max_length=55)
-
+    platform = models.ForeignKey(Platform, on_delete=models.SET_NULL,
+                                 blank=False, null=True, max_length=55)
 
     def __str__(self):
         return f"{self.full_name}'s Profile."
