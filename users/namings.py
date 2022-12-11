@@ -71,7 +71,7 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
     "hashTag": {
         "name_in_front": "Tags",
         "editable": False,
-        "field_type": "string",
+        "field_type": "selection+",
     },
 
     "image": {
@@ -108,10 +108,11 @@ TEACHER_FIELD_IDS_IN_FRONT = {
 FOREIGN_KEY_FIELDS = {
     "user_status": UserStatus,
     "title": Title,
+    "platform": Platform,
 }
 
 M2M_FIELDS = {
     "hashTag": HashTag,
-    "friends": User
+    "friends": User,
 }
 

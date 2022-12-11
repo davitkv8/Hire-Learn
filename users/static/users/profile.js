@@ -5,6 +5,7 @@ const user_fields_div_rows = ["full_name", 'birth_date', 'email',
 const user_feedback_fields = ["all_students", "feedbacks", "rating", "record_creation_datetime"];
 
 var editable_fields = [];
+var autocomplete_fields = [];
 
 
 function email_verification(user){
@@ -74,7 +75,8 @@ function draw_profile_page(){
             if(item[key]['field_type'] === 'selection') {
                 var column_value_input = document.createElement("div");
                 column_value_input.className = "autocomplete";
-                column_value_input.id = "autocomplete";
+                column_value_input.id = key[0] + "-autocomplete";
+
 
                 let autoCompleteInput = document.createElement("input");
                 autoCompleteInput.className = "autocomplete-input";
@@ -96,6 +98,11 @@ function draw_profile_page(){
                 column_value_input.style = "border: none; outline: none; background: none";
                 column_value_input.value = item[key]['value'];
                 column_value_input.id = key[0];
+            }
+
+            if (item[key]['field_type'] === "date") {
+                console.log("HER!");
+                column_value_input.type = "date";
             }
 
             if (!item[key]['editable']) {
@@ -140,6 +147,7 @@ function draw_profile_page(){
             profile_img.className = "rounded-circle";
             profile_img.src = item[key]['value'];
             profile_img.width = 250;
+            profile_img.height = 250;
 
             profile_img_div.appendChild(profile_img);
 
@@ -173,6 +181,28 @@ function send_changes(data){
     // url: `user/profile/${user_id}/`,
     data: data,
     success: function(result){
+        result = JSON.parse(result);
+        $("#alert").remove();
+
+        var message_div = document.getElementById("bootstrap-messages");
+        var crispy_message_div = document.createElement("div");
+        crispy_message_div.textContent = result.message;
+        crispy_message_div.id = "alert";
+        crispy_message_div.role = "alert";
+
+        if (result.status === 200) {
+            crispy_message_div.className = "alert alert-success";
+        }
+
+        else {
+            crispy_message_div.className = "alert alert-danger";
+        }
+
+        message_div.appendChild(crispy_message_div);
+
+        $("#alert").fadeTo(2000, 500).slideUp(500, function() {
+          $("#alert").slideUp(500);
+        });
     }
   });
 }
@@ -199,6 +229,35 @@ function save_changes() {
 
 }
 
-
-
 draw_profile_page();
+
+
+document.querySelectorAll('.autocomplete').forEach(item => {
+  item.addEventListener('click', event => {
+
+    function parseResponse(obj){
+        let names = []
+        obj.forEach(item => {
+            names.push(item['name']);
+        })
+        return names;
+    }
+
+    new Autocomplete(item, {
+        search : input => {
+
+            const url = `/user/auto-complete/?field=${item.id}&search=${input}`;
+            return new Promise(resolve => {
+                fetch(url)
+                    .then(response=>response.json())
+                    .then(data=>{
+                    data = parseResponse(data.payload);
+                    resolve(data);
+                })
+            })
+        },
+    })
+
+
+  })
+})

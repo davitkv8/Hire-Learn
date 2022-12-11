@@ -37,7 +37,10 @@ class TeacherProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # user = kwargs.pop('user', '')
         super(TeacherProfileForm, self).__init__(*args, **kwargs)
-        self.fields['platform'] = forms.ModelChoiceField(queryset=Platform.objects.all())
+
+        self.fields['platform'] = forms.ModelChoiceField(
+            queryset=Platform.objects.all().values_list('platform', flat=True)
+        )
 
 
 class StudentProfileForm(forms.ModelForm):

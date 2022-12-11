@@ -21,11 +21,18 @@ from .helpers import parse_values_from_lists_when_ajax_resp,\
 
 @login_required
 def get_names(request):
+    field = request.GET.get('field').split("-")[0]
     search = request.GET.get('search')
+
+    field_class = FOREIGN_KEY_FIELDS[field]
+    query_str = f"{field}__startswith"
+
     payload = []
 
     if search:
-        objs = TeacherProfile.objects.filter(platform__startswith=search)
+        objs = field_class.objects.filter(
+            **{query_str: search}
+        )
         for obj in objs:
             payload.append(
                 {'name': obj.platform}
@@ -85,13 +92,30 @@ def user_profile_view(request, user_pk):
         context['fields_data'] = get_user_profile_data(user)
 
     if request.method == "POST":
-        data = parse_values_from_lists_when_ajax_resp(dict(request.POST))
-        profile_model = get_request_user_profile_model_and_fields(user)['model_class']
-        data = create_foreign_keys_where_necessary(profile_model, data)
+        try:
+            data = parse_values_from_lists_when_ajax_resp(dict(request.POST))
+            profile_model = get_request_user_profile_model_and_fields(user)['model_class']
+            data = create_foreign_keys_where_necessary(profile_model, data)
 
-        profile_model.objects.filter(user=user).update(
-            **data
-        )
+            profile_model.objects.filter(user=user).update(
+                **data
+            )
+
+            return HttpResponse(
+                json.dumps({
+                    "status": 200,
+                    "message": "Successfully updated"
+                })
+            )
+
+        except Exception as e:
+            print(e)
+            return HttpResponse(
+                json.dumps({
+                    "status": 204,
+                    "message": "Please, fill in correct data"
+                })
+            )
 
 
     return render(request, "users/profile.html", context=context)
