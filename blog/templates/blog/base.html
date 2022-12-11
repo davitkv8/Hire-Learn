@@ -6,9 +6,9 @@
         <title>{{ title }}</title>
        {% endif %}
       <meta charset="utf-8">
-      <link rel="icon" href={% static 'blog/favicon/logo.png' %}>
+      <link rel="icon" href={% static 'blog/css/../../static/blog/images/logo.png' %}>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link type="text/css" rel="stylesheet" href='{% static 'blog/main.css' %}'>
+      <link type="text/css" rel="stylesheet" href='{% static 'blog/css/main.css' %}'>
 
 
    {% block link %}{% endblock link %}
@@ -20,7 +20,7 @@
   <style>
        body{
            background-position: center;
-           background-image: url({% static "blog/background_images/bg4.jpg" %});
+           background-image: url({% static "blog/images/bg4.jpg" %});
            background-attachment: fixed;
            background-size: cover;
        }
