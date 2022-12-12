@@ -4,6 +4,14 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 
 
+class TimeGraph(models.Model):
+    timeGraph = models.JSONField("Time Graph", null=True, blank=False)
+    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name="userTable")
+
+    def __str__(self):
+        return f"Time Graph of {self.user}"
+
+
 class Post(models.Model):
     title = models.CharField(blank=False, null=False, max_length=6000)
     description = models.TextField(blank=False, null=False, max_length=6000)
