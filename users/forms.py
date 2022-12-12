@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from users.models import TeachersProfile, UserProfile
+from users.models import TeacherProfile, StudentProfile, Platform
 
 
 class TeacherRegisterForm(UserCreationForm):
@@ -26,19 +26,27 @@ class TeacherRegisterForm(UserCreationForm):
 class TeacherProfileForm(forms.ModelForm):
 
     class Meta:
-        model = TeachersProfile
+        model = TeacherProfile
         fields = ['birth_date', 'full_name', 'lecture_price',
-                  'description', 'platform', 'image', 'subject']
+                  'description', 'platform', 'title']
         widgets = {
             'birth_date': forms.DateInput(attrs={'required': 'required', 'type': 'date'}),
             'description': forms.Textarea(attrs={"style": "resize: none"})
         }
 
+    def __init__(self, *args, **kwargs):
+        # user = kwargs.pop('user', '')
+        super(TeacherProfileForm, self).__init__(*args, **kwargs)
 
-class UserProfileForm(forms.ModelForm):
+        self.fields['platform'] = forms.ModelChoiceField(
+            queryset=Platform.objects.all().values_list('platform', flat=True)
+        )
+
+
+class StudentProfileForm(forms.ModelForm):
 
     class Meta:
-        model = UserProfile
+        model = StudentProfile
         fields = ['description']
         widgets = {
             # 'birth_date': forms.DateInput(attrs={'required': 'required', 'type': 'date'}),

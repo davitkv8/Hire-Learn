@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 {% load static %}
 {% block link %}
-    <link rel="stylesheet" href='../../static/blog/index.css'>
+    <link rel="stylesheet" href='../../static/blog/css/index.css'>
 {% endblock link %}
 
 {% block content %}
@@ -11,9 +11,9 @@
             <div class="form-box">
                 <h1 style="margin-left: 130px">Find your teacher!</h1>
 
-                <label for="subject"></label>
-                <select id="subject" name="subject" class="search-field business" required>
-                    <option value="">Subject</option>
+                <label for="title"></label>
+                <select id="title" name="title" class="search-field business" required>
+                    <option value="">Title</option>
                     <option value="Mathematics">Mathematics</option>
                     <option value="Physics">Physics</option>
                     <option value="Chemistry">Chemistry</option>

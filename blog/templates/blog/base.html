@@ -6,9 +6,9 @@
         <title>{{ title }}</title>
        {% endif %}
       <meta charset="utf-8">
-      <link rel="icon" href={% static 'blog/favicon/logo.png' %}>
+      <link rel="icon" href={% static 'blog/css/../../static/blog/images/logo.png' %}>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link type="text/css" rel="stylesheet" href='{% static 'blog/main.css' %}'>
+      <link type="text/css" rel="stylesheet" href='{% static 'blog/css/main.css' %}'>
 
 
    {% block link %}{% endblock link %}
@@ -20,7 +20,7 @@
   <style>
        body{
            background-position: center;
-           background-image: url({% static "blog/background_images/bg4.jpg" %});
+           background-image: url({% static "blog/images/bg4.jpg" %});
            background-attachment: fixed;
            background-size: cover;
        }
@@ -38,7 +38,7 @@
             <li><a href={% url 'main-view' %}>Home</a></li>
             <li><a href="">Contact</a></li>
 
-             {% if user.is_authenticated == False %}
+             {% if not user.is_authenticated %}
                 <li>
                    <label for="btn-2" class="show">Services +</label>
                    <a href="{% url 'login' %}">Log In</a>
@@ -46,12 +46,13 @@
                       <li><a href="{% url 'register' %}">Sign Up</a></li>
                    </ul>
                 </li>
-             {% elif user.is_authenticated == True %}
-                 {% if user.userstatus.status == 'teacher' %}
-                    <li><a href={% url 'complete-user' request.user.pk %}>Profile</a></li>
-                 {% elif user.userstatus.status == 'student' %}
-                     <li><a href={% url 'classroom' %}>Class Room</a></li>
-                 {% endif %}
+             {% elif user.is_authenticated %}
+{#                 {% if user.userstatus.userStatus == 'teacher' %}#}
+                    <li><a href={% url 'userProfile' request.user.pk %}>Profile</a></li>
+{#                 {% elif user.userstatus.userStatus == 'student' %}#}
+{#                     {{ user.userstatus.userStatus }}#}
+{#                     <li><a href={% url 'userProfile' %}>Class Room</a></li>#}
+{#                 {% endif %}#}
                  <li style="padding-top: 12px">
                    <button id="notification-button" type="button" class="icon-button" style="border: none">
 {#                       <span>Messages</span>#}
@@ -65,6 +66,9 @@
          </ul>
       </nav>
 
+      <div id="bootstrap-messages">
+
+      </div>
 
       <section>
           {% block content %}

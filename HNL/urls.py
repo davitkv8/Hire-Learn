@@ -15,12 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from django.conf import settings
 from django.contrib.auth.views import LogoutView
+from django.conf.urls.static import static
 
 from blog.views import main_view
+
 from users.views import Login, register,\
-    complete_user_registration, hash_tags, get_registration_field_namings, string_matcher
+    complete_user_registration, hash_tags,\
+    get_registration_field_namings, string_matcher,\
+    user_profile_view, get_user_profile_data, get_names
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,7 +39,11 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
 
     path('complete/profile/<int:pk>/', complete_user_registration, name='complete-user'),
-    path('hashTags/', hash_tags, name='hashTags'),
+    path('hashTag/', hash_tags, name='hashTag'),
     path('get_field_namings/', get_registration_field_namings, name='fieldNamings'),
     path('stringMatcher/', string_matcher, name='stringMatcher'),
-]
+    path('user/profile/<int:user_pk>/', user_profile_view, name='userProfile'),
+    path('user/profile_data/', get_user_profile_data, name='profile_data'),
+    path('user/auto-complete/', get_names, name='auto-complete')
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
