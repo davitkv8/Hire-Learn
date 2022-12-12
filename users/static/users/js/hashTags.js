@@ -94,7 +94,7 @@ registerButton.addEventListener("click", register);
 
   $.ajax({
     type: "GET",
-    url: url + "/stringMatcher/",
+    url: "/users/stringMatcher/",
     data: info,
     success: function(result){
         suggestions = JSON.parse(result)["suggestions"];
@@ -134,7 +134,7 @@ function register() {
 
     $.ajax({
     type: "POST",
-    url: url + "/hashTag/",
+    url: "/users/hashTag/",
     data: data,
     success: function(result){
         window.location.href = result.success;

@@ -5,7 +5,7 @@ var url = window.location
 function getFieldNamings() {
   $.ajax({
     type: 'GET',
-    url: "/get_field_namings",
+    url: "/users/get_field_namings",
     contentType: "text/plain",
     dataType: "json",
     success: function (data) {
