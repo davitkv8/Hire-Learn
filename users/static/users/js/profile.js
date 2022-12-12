@@ -1,4 +1,5 @@
-const user_id = JSON.parse(document.getElementById('user_id').textContent);
+const request_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
+const requested_user_id = JSON.parse(document.getElementById('requested_user_id').textContent);
 const user_fields_div_rows = ["full_name", 'birth_date', 'email',
         'lecture_price', 'platform', 'hashTag', "title"];
 
@@ -94,14 +95,13 @@ function draw_profile_page(){
 
             else {
                 var column_value_input = document.createElement("input");
-                column_value_input.className = "col-sm-9 text-secondary";
+                column_value_input.className = "col-sm-9";
                 column_value_input.style = "border: none; outline: none; background: none";
                 column_value_input.value = item[key]['value'];
                 column_value_input.id = key[0];
             }
 
             if (item[key]['field_type'] === "date") {
-                console.log("HER!");
                 column_value_input.type = "date";
             }
 
@@ -169,6 +169,17 @@ function draw_profile_page(){
         }
 
     });
+
+    // If users who'is requesting actual profile is not the same
+        if (request_user_id !== requested_user_id){
+         let inputs = document.getElementsByTagName('input');
+            for (index = 0; index < inputs.length; ++index) {
+                inputs[index].disabled = true;
+            }
+
+         document.getElementById("description").disabled = true;
+
+        }
 
 }
 

@@ -1,6 +1,6 @@
 import json
 
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, Http404
 from django.urls import reverse
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
@@ -86,25 +86,36 @@ def user_profile_view(request, user_pk):
 
     }
 
-    user = User.objects.get(pk=user_pk)
+    requested_user = User.objects.get(pk=user_pk)  # User who's profile is requested to see
+    request_user = request.user  # Just request user.
 
     if request.method == "GET":
-        context['fields_data'] = get_user_profile_data(user)
+        context['fields_data'] = get_user_profile_data(requested_user)
+        context['requested_user'] = requested_user
 
     if request.method == "POST":
         try:
-            data = parse_values_from_lists_when_ajax_resp(dict(request.POST))
-            profile_model = get_request_user_profile_model_and_fields(user)['model_class']
-            data = create_foreign_keys_where_necessary(profile_model, data)
 
-            profile_model.objects.filter(user=user).update(
-                **data
-            )
+            if request_user == requested_user:
+                data = parse_values_from_lists_when_ajax_resp(dict(request.POST))
+                profile_model = get_request_user_profile_model_and_fields(requested_user)['model_class']
+                data = create_foreign_keys_where_necessary(profile_model, data)
+
+                profile_model.objects.filter(user=requested_user).update(
+                    **data
+                )
+
+                return HttpResponse(
+                    json.dumps({
+                        "status": 200,
+                        "message": "Successfully updated"
+                    })
+                )
 
             return HttpResponse(
                 json.dumps({
-                    "status": 200,
-                    "message": "Successfully updated"
+                    "status": 404,
+                    "message": "Invalid Request"
                 })
             )
 
