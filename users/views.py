@@ -69,7 +69,7 @@ def get_user_profile_data(user: User):
             value = getattr(value, field)
 
         if field == "image":
-            value = getattr(value, field).url
+            value = "/users" + getattr(value, field).url
 
         if type(value) in [datetime, date, time]:
             value = value.strftime("%Y-%m-%d")
