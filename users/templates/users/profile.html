@@ -16,6 +16,11 @@
 
 {% block content %}
 
+<div class="alert alert-danger" role="alert">
+
+</div>
+
+
 {% if request.user == object.user %}
 
     {% if object.is_active == False %}

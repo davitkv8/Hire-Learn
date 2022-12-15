@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from users.models import Relationship, TeacherProfile
 from classroom.models import TimeGraph
+from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
 import json
 
 
@@ -15,7 +16,10 @@ class AjaxTimeTable(View):
         request_user_id = request.user.id
         requested_user_id = int(user_pk)
 
-        time_graph = TimeGraph.objects.filter(user=requested_user_id).first()
+        profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
+        profile = profile_model.objects.get(user=request.user)
+
+        time_graph = profile.timeGraph
 
         context = {
             "requested_user_id": requested_user_id,
@@ -47,23 +51,32 @@ class AjaxTimeTable(View):
             time_graph_data[key] = result
             result = {}
 
-
         request_user_id = request.user.id
         requested_user_id = int(user_pk)
 
         if request_user_id == requested_user_id:
-            TimeGraph.objects.update_or_create(
-                user=request.user,
-                defaults={
-                    'user': request.user,
-                    'timeGraph': time_graph_data
-                },
-            )
+            try:
+                profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
+                data = create_foreign_keys_where_necessary(
+                    profile_model,
+                    {"timeGraph": time_graph_data}
+                )
 
-            return HttpResponse(json.dumps({
-                "status": 200,
-                "message": "Your Time Graph has saved successfully",
-            }))
+                profile_model.objects.filter(user=request.user).update(
+                    **data
+                )
+
+                return HttpResponse(json.dumps({
+                    "status": 200,
+                    "message": "Your Time Graph has saved successfully",
+                }))
+
+            except Exception as e:
+                print(e)
+                return HttpResponse(json.dumps({
+                    "status": 404,
+                    "message": "Sorry, your request can't be handled",
+                }))
 
         #
         # else:

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 from bulk_update_or_create import BulkUpdateOrCreateQuerySet
+from classroom.models import *
 
 
 class Image(models.Model):
@@ -71,6 +72,7 @@ class BasicAbstractProfile(models.Model):
     description = models.TextField(blank=False, null=True, max_length=6000)
     hashTag = models.ManyToManyField(HashTag)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True)
+    timeGraph = models.OneToOneField(TimeGraph, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=False)
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
     record_creation_datetime = models.DateTimeField(editable=True, auto_now=True)

@@ -6,11 +6,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.fields.related import ForeignKey
 from django.shortcuts import redirect
 from django.urls import reverse
-
-from users.models import StudentProfile, TeacherProfile
 from users.namings import (
             VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE,
-            VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE
+            VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE,
+            FOREIGN_KEY_FIELDS
         )
 
 FIELDS_TO_BE_IGNORED = [
@@ -72,17 +71,20 @@ def create_foreign_keys_where_necessary(model_class, data):
     for field in model_class._meta.fields:
 
         field_name = field.name
+
         if field_name in FIELDS_TO_BE_IGNORED:
             continue
 
-        if type(field) == ForeignKey:
-            print(field)
+        if field_name in FOREIGN_KEY_FIELDS:
+            try:
+                instance, created = field.remote_field.model.objects.get_or_create(
+                    **{field_name: data[field_name]},
+                    defaults={field_name: data[field_name]}
+                )
 
-            instance, created = field.remote_field.model.objects.get_or_create(
-                **{field_name: data[field_name]},
-                defaults={field_name: data[field_name]}
-            )
+                data[field_name] = instance
 
-            data[field_name] = instance
+            except KeyError:
+                continue
 
     return data

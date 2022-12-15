@@ -93,7 +93,7 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
     },
 
     "hasTimeGraph": {
-        "name_in_front": None,
+        "name_in_front": "You have not set time graph yet",
         "editable": False,
         "field_type": "alert-box"
     }
@@ -115,6 +115,7 @@ FOREIGN_KEY_FIELDS = {
     "user_status": UserStatus,
     "title": Title,
     "platform": Platform,
+    "timeGraph": TimeGraph,
 }
 
 M2M_FIELDS = {
