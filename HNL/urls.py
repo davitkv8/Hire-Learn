@@ -18,10 +18,12 @@ from django.urls import path, include
 
 from blog import urls as blog_urls
 from users import urls as user_urls
+from classroom import urls as classroom_urls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include(blog_urls)),
     path('users/', include(user_urls)),
+    path('classroom/', include(classroom_urls)),
 ]

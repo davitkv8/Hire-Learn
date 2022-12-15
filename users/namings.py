@@ -92,6 +92,12 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
         "field_type": "string",
     },
 
+    "hasTimeGraph": {
+        "name_in_front": None,
+        "editable": False,
+        "field_type": "alert-box"
+    }
+
 }
 
 

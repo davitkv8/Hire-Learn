@@ -10,39 +10,68 @@ import json
 
 class AjaxTimeTable(View):
 
-    def get(self, request, user_pk):
-        user_table = TimeGraph.objects.filter(user=user_pk).first()
-        if user_table is None:
-            return render(request, 'classroom/time_table.html', {"object": int(user_pk)})
-        return render(request, 'classroom/time_table.html', {'days': user_table.available_time,
-                                                             "object": int(user_pk)})
+    def get(self, request, user_pk, as_dict=False):
+
+        request_user_id = request.user.id
+        requested_user_id = int(user_pk)
+
+        time_graph = TimeGraph.objects.filter(user=requested_user_id).first()
+
+        context = {
+            "requested_user_id": requested_user_id,
+            "request_user_id": request_user_id,
+            "days_data": time_graph.timeGraph if time_graph else None
+        }
+
+        return render(request, 'classroom/time_table.html', context=context)
+
+        # return render(request, 'classroom/time_table.html', {'days': user_table.available_time,
+        #                                                      "object": int(user_pk)})
 
     def post(self, request, user_pk):
-        user_pk = int(user_pk)
-        user = User.objects.get(pk=user_pk)
-        days = request.POST['availableDays']
-        days = json.loads(days)
-        created = TimeGraph.objects.filter(user=request.user).first()
+        time_graph_data = json.loads(request.POST['days_data'])
 
-        if request.user == user:
-            if created is None:
-                created = TimeGraph.objects.create(user=request.user)
-                created.available_time = []
-            for day in days['availableDays']:
-                created.available_time.append(day)
+        result = {
 
-            for day in days['unavailableDays']:
-                if day in created.available_time:
-                    created.available_time.remove(day)
+        }
 
-            created.save()
+        # incoming data -> {monday: [{'0:00-1:00': 'false'}, {'1:00-2:00': 'false'}, ...]}
+        # dict where values are list of dictionaries
+        # edited data ->  {'wednesday': {'0:00-1:00': 'false', '10:00-11:00': 'false', ...}
+        # just parsing values and storing them as dict itself.
 
-        else:
-            relationship = Relationship.objects.create(sender=request.user,
-                                                       receiver=TeacherProfile.objects.get(pk=user.teachersprofile.pk),
-                                                       status="send")
-            relationship.available_time = []
-            for day in days['availableDays']:
-                relationship.available_time.append(day)
-            relationship.save()
+        for key, list_value in time_graph_data.items():
+            for key_value in list_value:
+                result.update(key_value)
+
+            time_graph_data[key] = result
+            result = {}
+
+
+        request_user_id = request.user.id
+        requested_user_id = int(user_pk)
+
+        if request_user_id == requested_user_id:
+            TimeGraph.objects.update_or_create(
+                user=request.user,
+                defaults={
+                    'user': request.user,
+                    'timeGraph': time_graph_data
+                },
+            )
+
+            return HttpResponse(json.dumps({
+                "status": 200,
+                "message": "Your Time Graph has saved successfully",
+            }))
+
+        #
+        # else:
+        #     relationship = Relationship.objects.create(sender=request.user,
+        #                                                receiver=TeacherProfile.objects.get(pk=user.teachersprofile.pk),
+        #                                                status="send")
+        #     relationship.available_time = []
+        #     for day in days['availableDays']:
+        #         relationship.available_time.append(day)
+        #     relationship.save()
         return HttpResponse()
