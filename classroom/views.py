@@ -29,9 +29,6 @@ class AjaxTimeTable(View):
 
         return render(request, 'classroom/time_table.html', context=context)
 
-        # return render(request, 'classroom/time_table.html', {'days': user_table.available_time,
-        #                                                      "object": int(user_pk)})
-
     def post(self, request, user_pk):
         time_graph_data = json.loads(request.POST['days_data'])
 

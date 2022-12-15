@@ -6,26 +6,31 @@ VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE = {
     "username": {
         "name_in_front": "Username",
         "editable": True,
+        "field_type": "string",
     },
 
     "description": {
         "name_in_front": "Description",
         "editable": True,
+        "field_type": "string",
     },
 
     "hashTag": {
         "name_in_front": "Tags",
         "editable": False,
+        "field_type": "selection+",
     },
 
     "image": {
         "name_in_front": "Profile Picture",
         "editable": True,
+        "field_type": "string",
     },
 
     "record_creation_datetime": {
         "name_in_front": "Since",
         "editable": False,
+        "field_type": "datetime",
     }
 }
 
@@ -92,10 +97,11 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
         "field_type": "string",
     },
 
-    "hasTimeGraph": {
-        "name_in_front": "You have not set time graph yet",
+    "timeGraph": {
+        "name_in_front": "You have not set time graph yet."
+                         "please, set it to be visible for other users.",
         "editable": False,
-        "field_type": "alert-box"
+        "field_type": "alert alert-danger",
     }
 
 }

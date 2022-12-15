@@ -168,6 +168,19 @@ function draw_profile_page(){
 
         }
 
+        else if (item[key]['field_type'].includes("alert")) {
+            console.log(item[key]['field_type']);
+            if (!item[key]['value']){
+
+            let alert_div = document.createElement("div");
+            alert_div.className = item[key]['field_type'];
+            alert_div.role = "alert";
+            alert_div.textContent = item[key]["name_in_front"];
+            document.getElementsByTagName("section")[0].prepend(alert_div);
+
+            }
+        }
+
     });
 
     // If users who'is requesting actual profile is not the same

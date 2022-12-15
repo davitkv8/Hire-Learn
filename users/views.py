@@ -62,6 +62,11 @@ def get_user_profile_data(user: User):
         except AttributeError:
             value = getattr(user, field)
 
+        if value is None:
+            fields[field]['value'] = value
+            field_info_with_value.append({field: fields[field]})
+            continue
+
         if field in M2M_FIELDS:
             value = [i for i in value.values_list(field, flat=True)]
 

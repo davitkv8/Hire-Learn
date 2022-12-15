@@ -16,10 +16,6 @@
 
 {% block content %}
 
-<div class="alert alert-danger" role="alert">
-
-</div>
-
 
 {% if request.user == object.user %}
 
@@ -30,11 +26,6 @@
         and we'll send activation link to your E-mail.
     </div>
     {% endif %}
-
-    <div class="alert alert-warning" role="alert">
-      You have not set a time table yet. If you want to set it right now follow the
-{#        <a href="{% url 'time_table' request.user.pk%}" class="alert-link">link</a>.#}
-    </div>
 
 
     {% for foo in friendRequest %}
@@ -98,64 +89,6 @@
             <div class="col-md-8">
               <div class="card mb-3" style="width: 715px">
                 <div class="card-body" id="user-fields">
-{#                  <div class="row">#}
-{#                    <div class="col-sm-3">#}
-{#                      <h6 class="mb-0">Full Name</h6>#}
-{#                    </div>#}
-{#                    <div id="autocomplete" class="autocomplete">#}
-{#                      <input class="autocomplete-input"/>#}
-{#                      <ul class="autocomplete-result-list" style="border: none"></ul>#}
-{#                    </div>#}
-{#                  </div>#}
-                  <hr>
-{#                  <div class="row">#}
-{#                    <div class="col-sm-3">#}
-{#                      <h6 class="mb-0">Email</h6>#}
-{#                    </div>#}
-{#                    <div class="col-sm-9 text-secondary">#}
-{#                        {{ object.user.email }}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                  <hr>#}
-{#                  <div class="row">#}
-{#                    <div class="col-sm-3">#}
-{#                      <h6 class="mb-0">title</h6>#}
-{#                    </div>#}
-{#                    <div class="col-sm-9 text-secondary">#}
-{#                        {% if request.user == object.user %}#}
-{#                            {% render_field form.title style="border: none; outline: none" %}#}
-{#                        {% else %}#}
-{#                            <span>{{ object.title }}</span>#}
-{#                        {% endif %}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                  <hr>#}
-{#                  <div class="row">#}
-{#                    <div class="col-sm-3">#}
-{#                      <h6 class="mb-0">Price</h6>#}
-{#                    </div>#}
-{#                    <div class="col-sm-9 text-secondary">#}
-{#                         {% if request.user == object.user %}#}
-{#                             {% render_field form.lecture_price style="border: none; outline: none; width: 42px" %}#}
-{#                             GEL per month#}
-{#                         {% else %}#}
-{#                             <span>{{ object.lecture_price }} GEL per month</span>#}
-{#                         {% endif %}#}
-{#                    </div>#}
-{#                  </div>#}
-{#                  <hr>#}
-{#                  <div class="row">#}
-{#                    <div class="col-sm-3">#}
-{#                      <h6 class="mb-0">Primary platform</h6>#}
-{#                    </div>#}
-{#                    <div class="col-sm-9 text-secondary">#}
-{#                        {% if request.user == object.user %}#}
-{#                            {% render_field form.platform style="border: none; outline: none;"%}#}
-{#                        {% else %}#}
-{#                            <span>{{ object.platform }}</span>#}
-{#                        {% endif %}#}
-{#                    </div>#}
-{#                  </div>#}
                 </div>
               </div>
               <div class="row gutters-sm">
