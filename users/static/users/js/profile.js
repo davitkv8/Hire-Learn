@@ -269,7 +269,8 @@ document.querySelectorAll('.autocomplete').forEach(item => {
     new Autocomplete(item, {
         search : input => {
 
-            const url = `/auto-complete/?field=${item.id}&search=${input}`;
+            const url = `/users/auto-complete/?field=${item.id}&search=${input}`;
+            console.log(url);
             return new Promise(resolve => {
                 fetch(url)
                     .then(response=>response.json())

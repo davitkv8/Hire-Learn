@@ -1,6 +1,9 @@
 var userTimeGraph = JSON.parse(document.getElementById('days_data').textContent);
 const request_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
 const requested_user_id = JSON.parse(document.getElementById('requested_user_id').textContent);
+
+const url = window.location.href;
+
 var allDays = {
   "availableDays": [],
   "unavailableDays": [],
@@ -18,6 +21,7 @@ function draw_time_table(){
   for (let i = 1; i < week_days.length; i++) {
       for (let j = 0; j < 12; j++) {
           let div = document.createElement("div");
+          div.className = "weekXhour-div";
           let input = document.createElement("input");
           let week_day = week_days[i].className.split(' ')[1];
           let hour_range = hours[j].textContent.replace(/\s/g, '');
@@ -33,33 +37,50 @@ function draw_time_table(){
 
           // If requested user is itself request user.
           // Another words, if user checking his time graph
-          if(request_user_id === requested_user_id) {
-            if (!userTimeGraph) {
-                // If teacher has not set his timetable case.
-                input.setAttribute("data-status", "false");
-            }
 
-            else {
-                var get_data_status_value = userTimeGraph[week_day][hour_range];
-                input.setAttribute("data-status", get_data_status_value);
-            }
+          if (url.includes("booking_pk")) {
+              var get_data_status_value = userTimeGraph[week_day][hour_range]
+
+              if (get_data_status_value == true){
+                    input = document.createElement("img");
+                    input.src = "../../static/classroom/images/marked_v3.png";
+                    div.style = "background-color: #949494;";
+                    input.style = "height: 100%; display: flex; margin: auto"
+                }
+
+              else {
+                  input.setAttribute("data-status", get_data_status_value);
+              }
+
+              input.disabled = true;
 
           }
 
-
-          // if one user checking other user's time graph (student booking for teacher)
-          // then, student is able to choose only fields where teacher has available times.
           else {
-              var get_data_status_value = userTimeGraph[week_day][hour_range];
+              if (request_user_id === requested_user_id) {
+                  if (!userTimeGraph) {
+                      // If teacher has not set his timetable case.
+                      input.setAttribute("data-status", "false");
+                  } else {
+                      var get_data_status_value = userTimeGraph[week_day][hour_range];
+                      input.setAttribute("data-status", get_data_status_value);
+                  }
 
-              if (get_data_status_value === true) {
-                  input.setAttribute("data-status", "false");
               }
 
+
+              // if one user checking other user's time graph (student booking for teacher)
+              // then, student is able to choose only fields where teacher has available times.
               else {
-                  input.setAttribute("data-status", "false");
-                  input.style = "background-color: #f59f9f !important;"
-                  input.disabled = true;
+                  var get_data_status_value = userTimeGraph[week_day][hour_range];
+
+                  if (get_data_status_value === true) {
+                      input.setAttribute("data-status", "false");
+                  } else {
+                      input.setAttribute("data-status", "false");
+                      input.style = "background-color: #f59f9f !important;"
+                      input.disabled = true;
+                  }
               }
           }
 
@@ -129,10 +150,10 @@ submit_button.addEventListener("click", function() {
 
 function heightResizer(){
     var hour_div_height = document.getElementsByClassName("hour")[0].clientHeight;
-
+    console.log(hour_div_height);
     // It makes inputs responsive
-    $("input" ).each(function(){
-        $(this).css("height", hour_div_height);
+    $(".weekXhour-div" ).each(function(){
+        $(this).css("height", hour_div_height-1);
         $(this).css("display", "flex");
         $(this).css("border-bottom", "1px solid white");
     });

@@ -22,11 +22,14 @@
     {% for booking in bookingRequests %}
 {#        json.{{ foo.sender }}#}
         <div class="alert alert-success" role="alert">
-            You've new request <a href="{% url 'userProfile' booking.sender.id  %}">{{ booking.sender.username }}</a> - see offered times <a target="_blank"
+            You've new request from <a href="{% url 'userProfile' booking.sender.id  %}">
+            {{ booking.sender.username }}</a> - see offered times <a target="_blank"
                 href="/classroom/time_table/?booking_pk=2">Here</a>
-            <button type="button" class="btn btn-success" value="approve" id={{ booking.sender.id }}
+            <button type="button" class="btn btn-success"
+                    value="true" data-sender_id={{ booking.sender.id }}
                     onclick="func(this)">Approve</button>
-            <button type="button" class="btn btn-danger" value="decline" id={{ booking.sender.id }}
+            <button type="button" class="btn btn-danger"
+                    value="false" data-sender_id={{ booking.sender.id }}
                     onclick="func(this)">Decline</button>
         </div>
     {% endfor %}
@@ -134,6 +137,27 @@
 document.getElementById("book-btn").onclick = function () {
     location.href = "{% url "time_table" requested_user.id %}"
 };
+
+function func(arg){
+    parentDiv = arg.parentNode
+    parentDiv.remove()
+
+      $.ajax(
+            {
+            url: "{% url "response_booking" %}",
+            type: 'POST',
+            data: {
+                is_confirmed: arg.value,
+                sender_id: arg.getAttribute("data-sender_id"),
+                receiver_id: request_user_id,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response){
+                console.log(response);
+        }
+      });
+
+    }
 </script>
 
 

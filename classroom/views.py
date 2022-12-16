@@ -1,11 +1,12 @@
-from django.shortcuts import render
 from django.shortcuts import render, HttpResponse, redirect
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
-from classroom.services import send_or_approve_booking_request
+from classroom.services import send_or_approve_booking_request, get_booking_requests
 from classroom.models import *
+from users.helpers import parse_values_from_lists_when_ajax_resp
+
 import copy
 import json
 
@@ -15,7 +16,7 @@ TEMPLATE_DAYS_DATA = json.load(
 )
 
 
-class AjaxTimeTable(View):
+class AjaxTimeTable(LoginRequiredMixin, View):
     template_data = copy.deepcopy(TEMPLATE_DAYS_DATA)
 
     def get(self, request, user_pk=None):
@@ -100,13 +101,29 @@ class AjaxTimeTable(View):
             }))
 
 
-        #
-        # else:
-        #     relationship = Relationship.objects.create(sender=request.user,
-        #                                                receiver=TeacherProfile.objects.get(pk=user.teachersprofile.pk),
-        #                                                status="send")
-        #     relationship.available_time = []
-        #     for day in days['availableDays']:
-        #         relationship.available_time.append(day)
-        #     relationship.save()
-        # return HttpResponse()
+@login_required
+def response_booking(request):
+    data = parse_values_from_lists_when_ajax_resp(dict(request.POST))
+
+    try:
+        rel_obj = get_booking_requests(
+            receiver_id=data['receiver_id'],
+            sender_id=data['sender_id']
+        )
+
+        rel_obj.update(**data)
+
+        return HttpResponse(json.dumps(
+            {
+                "status": 200,
+                "friends_count": get_booking_requests(
+                 receiver_id=data['receiver_id'], is_confirmed=True
+                ).count()
+             }
+        ))
+
+    except Exception as e:
+        print(e)
+        return HttpResponse(json.dumps({"status": 404}))
+
+

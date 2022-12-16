@@ -101,7 +101,10 @@ def user_profile_view(request, user_pk=None):
     if request.method == "GET":
         context['fields_data'] = get_user_profile_data(requested_user)
         context['requested_user'] = requested_user
-        context['bookingRequests'] = get_booking_requests(requested_user.id)
+
+        context['bookingRequests'] = get_booking_requests(
+            **{"receiver_id": requested_user.id, "is_confirmed": False}
+        )
 
     if request.method == "POST":
         try:

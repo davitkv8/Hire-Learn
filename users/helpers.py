@@ -55,8 +55,19 @@ def get_request_user_profile_model_and_fields(user):
 
 
 def parse_values_from_lists_when_ajax_resp(obj: dict) -> dict:
+    def convert_to_correct_dt(value):
+        bool_variations = {
+            "true": True,
+            "false": False,
+        }
+
+        if value in bool_variations:
+            return bool_variations[value]
+
+        return value
+
     return {
-        key.replace("[]", ""): value[0]
+        key.replace("[]", ""): convert_to_correct_dt(value[0])
         for key, value in obj.items() if key != 'csrfmiddlewaretoken'
     }
 

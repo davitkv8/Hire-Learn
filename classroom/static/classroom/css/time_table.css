@@ -126,7 +126,7 @@ body {
 
 div input{
     width: 100%;
-    height: 44.5px;
+    height: 100%;
     border: none;
 }
 
@@ -146,5 +146,7 @@ div input{
 [data-status=true] {
   background-color: green;
 }
+
+.
 
 
