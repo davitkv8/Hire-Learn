@@ -3,9 +3,9 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from users.models import Relationship, TeacherProfile
-from classroom.models import TimeGraph
 from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
+from classroom.services import send_or_approve_booking_request
+from classroom.models import *
 import copy
 import json
 
@@ -16,8 +16,25 @@ TEMPLATE_DAYS_DATA = json.load(
 
 
 class AjaxTimeTable(View):
+    template_data = copy.deepcopy(TEMPLATE_DAYS_DATA)
 
-    def get(self, request, user_pk):
+    def get(self, request, user_pk=None):
+
+        if request.GET.get('booking_pk'):
+
+            agreed_days = Relationship.objects.get(
+                pk=int(request.GET.get('booking_pk'))
+            ).agreed_days
+
+            for key, list_value in agreed_days.items():
+                for key_value in list_value:
+                    self.template_data[key][key_value] = True
+
+            context = {
+                "days_data": self.template_data
+            }
+
+            return render(request, "classroom/time_table.html", context=context)
 
         request_user_id = request.user.id
         requested_user_id = int(user_pk)
@@ -38,8 +55,6 @@ class AjaxTimeTable(View):
         return render(request, 'classroom/time_table.html', context=context)
 
     def post(self, request, user_pk):
-
-        template_data = copy.deepcopy(TEMPLATE_DAYS_DATA)
         time_graph_data = json.loads(request.POST['days_data'])
 
         # incoming data -> {monday: [{'0:00-1:00': 'false'}, {'1:00-2:00': 'false'}, ...]}
@@ -49,20 +64,23 @@ class AjaxTimeTable(View):
 
         for key, list_value in time_graph_data.items():
             for key_value in list_value:
-                template_data[key][key_value] = True
+                self.template_data[key][key_value] = True
 
         request_user_id = request.user.id
         requested_user_id = int(user_pk)
 
         # student sending request to teacher case
         if request_user_id != requested_user_id:
-            pass
+
+            send_or_approve_booking_request(
+                request_user_id, requested_user_id, time_graph_data
+            )
 
         try:
             profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
             data = create_foreign_keys_where_necessary(
                 profile_model,
-                {"timeGraph": template_data}
+                {"timeGraph": self.template_data}
             )
 
             profile_model.objects.filter(user=request.user).update(

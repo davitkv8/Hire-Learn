@@ -17,25 +17,16 @@
 {% block content %}
 
 
-{% if request.user == object.user %}
+{% if request.user == requested_user %}
 
-    {% if object.is_active == False %}
-    <div class="alert alert-danger" role="alert">
-      Account is not activated yet. <a href="" onclick=email_verification(this) class="alert-link"
-                                       id="{{ request.user.id }}">CLICK HERE</a>
-        and we'll send activation link to your E-mail.
-    </div>
-    {% endif %}
-
-
-    {% for foo in friendRequest %}
+    {% for booking in bookingRequests %}
 {#        json.{{ foo.sender }}#}
         <div class="alert alert-success" role="alert">
-            You've new request - see offered times <a target="_blank"
-                href={% url 'requested_table' foo.sender foo.receiver.full_name %}>Here</a>
-            <button type="button" class="btn btn-success" value="approve" id={{ foo.sender.id }}
+            You've new request <a href="{% url 'userProfile' booking.sender.id  %}">{{ booking.sender.username }}</a> - see offered times <a target="_blank"
+                href="/classroom/time_table/?booking_pk=2">Here</a>
+            <button type="button" class="btn btn-success" value="approve" id={{ booking.sender.id }}
                     onclick="func(this)">Approve</button>
-            <button type="button" class="btn btn-danger" value="decline" id={{ foo.sender.id }}
+            <button type="button" class="btn btn-danger" value="decline" id={{ booking.sender.id }}
                     onclick="func(this)">Decline</button>
         </div>
     {% endfor %}

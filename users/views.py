@@ -11,13 +11,17 @@ from django.http import JsonResponse
 from datetime import datetime, time, date
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
+
 from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT,\
     TEACHER_FIELD_IDS_IN_FRONT, M2M_FIELDS, FOREIGN_KEY_FIELDS
+
 from users.models import UserStatus, TeacherProfile, Image, StudentProfile, HashTag
+
 from .helpers import parse_values_from_lists_when_ajax_resp,\
     validate_image, create_foreign_keys_where_necessary,\
     get_request_user_profile_model_and_fields
 
+from classroom.services import get_booking_requests
 
 @login_required
 def get_names(request):
@@ -85,7 +89,7 @@ def get_user_profile_data(user: User):
     return json.dumps(field_info_with_value)
 
 
-def user_profile_view(request, user_pk):
+def user_profile_view(request, user_pk=None):
 
     context = {
 
@@ -97,6 +101,7 @@ def user_profile_view(request, user_pk):
     if request.method == "GET":
         context['fields_data'] = get_user_profile_data(requested_user)
         context['requested_user'] = requested_user
+        context['bookingRequests'] = get_booking_requests(requested_user.id)
 
     if request.method == "POST":
         try:

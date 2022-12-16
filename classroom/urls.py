@@ -3,4 +3,5 @@ from classroom.views import *
 
 urlpatterns = [
     re_path(r'^time_table/(?P<user_pk>[0-9]+)/$', AjaxTimeTable.as_view(), name="time_table"),
+    path('time_table/', AjaxTimeTable.as_view(), name="requested_table")
 ]
