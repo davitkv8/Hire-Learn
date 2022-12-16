@@ -66,6 +66,15 @@ def get_user_profile_data(user: User):
         except AttributeError:
             value = getattr(user, field)
 
+        # If value is model method
+        if callable(value):
+            try:
+                value = value()
+            # ManyRelated comes with __call__ method
+            except TypeError:
+                pass
+
+        # If value is foreign key instance, which is not created yet
         if value is None:
             fields[field]['value'] = value
             field_info_with_value.append({field: fields[field]})

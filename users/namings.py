@@ -97,6 +97,12 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
         "field_type": "string",
     },
 
+    "get_relationship_counts": {
+        "name_in_front": "Students",
+        "editable": False,
+        "field_type": "int",
+    },
+
     "timeGraph": {
         "name_in_front": "You have not set time graph yet."
                          "please, set it to be visible for other users.",

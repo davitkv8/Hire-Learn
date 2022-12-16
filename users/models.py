@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
+from django.db.models import Q
 from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 from classroom.models import *
 
@@ -113,8 +114,11 @@ class TeacherProfile(BasicAbstractProfile):
         return f"{self.full_name}'s Profile."
 
     #
-    # def get_friends(self):
-    #     return self.friends.all()
+    def get_relationship_counts(self):
+        return Relationship.objects.filter(
+            Q(sender=self.user) | Q(receiver=self.user),
+            is_confirmed=True
+        ).count()
     #
     # def get_friends_number(self):
     #     return self.friends.all().count()

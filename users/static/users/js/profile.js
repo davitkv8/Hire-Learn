@@ -3,7 +3,8 @@ const requested_user_id = JSON.parse(document.getElementById('requested_user_id'
 const user_fields_div_rows = ["full_name", 'birth_date', 'email',
         'lecture_price', 'platform', 'hashTag', "title"];
 
-const user_feedback_fields = ["all_students", "feedbacks", "rating", "record_creation_datetime"];
+const user_feedback_fields = ["get_relationship_counts",
+    "feedbacks", "rating", "record_creation_datetime"];
 
 var editable_fields = [];
 var autocomplete_fields = [];
