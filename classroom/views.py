@@ -6,18 +6,26 @@ from django.contrib.auth.models import User
 from users.models import Relationship, TeacherProfile
 from classroom.models import TimeGraph
 from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
+import copy
 import json
+
+
+TEMPLATE_DAYS_DATA = json.load(
+    open('template_days_data.json')
+)
 
 
 class AjaxTimeTable(View):
 
-    def get(self, request, user_pk, as_dict=False):
+    def get(self, request, user_pk):
 
         request_user_id = request.user.id
         requested_user_id = int(user_pk)
 
-        profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
-        profile = profile_model.objects.get(user=request.user)
+        requested_user = User.objects.get(pk=requested_user_id)
+
+        profile_model = get_request_user_profile_model_and_fields(requested_user)['model_class']
+        profile = profile_model.objects.get(user=requested_user)
 
         time_graph = profile.timeGraph
 
@@ -30,11 +38,9 @@ class AjaxTimeTable(View):
         return render(request, 'classroom/time_table.html', context=context)
 
     def post(self, request, user_pk):
+
+        template_data = copy.deepcopy(TEMPLATE_DAYS_DATA)
         time_graph_data = json.loads(request.POST['days_data'])
-
-        result = {
-
-        }
 
         # incoming data -> {monday: [{'0:00-1:00': 'false'}, {'1:00-2:00': 'false'}, ...]}
         # dict where values are list of dictionaries
@@ -43,37 +49,38 @@ class AjaxTimeTable(View):
 
         for key, list_value in time_graph_data.items():
             for key_value in list_value:
-                result.update(key_value)
-
-            time_graph_data[key] = result
-            result = {}
+                template_data[key][key_value] = True
 
         request_user_id = request.user.id
         requested_user_id = int(user_pk)
 
-        if request_user_id == requested_user_id:
-            try:
-                profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
-                data = create_foreign_keys_where_necessary(
-                    profile_model,
-                    {"timeGraph": time_graph_data}
-                )
+        # student sending request to teacher case
+        if request_user_id != requested_user_id:
+            pass
 
-                profile_model.objects.filter(user=request.user).update(
-                    **data
-                )
+        try:
+            profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
+            data = create_foreign_keys_where_necessary(
+                profile_model,
+                {"timeGraph": template_data}
+            )
 
-                return HttpResponse(json.dumps({
-                    "status": 200,
-                    "message": "Your Time Graph has saved successfully",
-                }))
+            profile_model.objects.filter(user=request.user).update(
+                **data
+            )
 
-            except Exception as e:
-                print(e)
-                return HttpResponse(json.dumps({
-                    "status": 404,
-                    "message": "Sorry, your request can't be handled",
-                }))
+            return HttpResponse(json.dumps({
+                "status": 200,
+                "message": "Your Time Graph has saved successfully",
+            }))
+
+        except Exception as e:
+            print(e)
+            return HttpResponse(json.dumps({
+                "status": 404,
+                "message": "Sorry, your request can't be handled",
+            }))
+
 
         #
         # else:
@@ -84,4 +91,4 @@ class AjaxTimeTable(View):
         #     for day in days['availableDays']:
         #         relationship.available_time.append(day)
         #     relationship.save()
-        return HttpResponse()
+        # return HttpResponse()

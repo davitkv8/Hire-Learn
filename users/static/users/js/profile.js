@@ -169,7 +169,6 @@ function draw_profile_page(){
         }
 
         else if (item[key]['field_type'].includes("alert")) {
-            console.log(item[key]['field_type']);
             if (!item[key]['value']){
 
             let alert_div = document.createElement("div");

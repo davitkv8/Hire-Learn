@@ -46,6 +46,23 @@ function draw_time_table(){
 
           }
 
+
+          // if one user checking other user's time graph (student booking for teacher)
+          // then, student is able to choose only fields where teacher has available times.
+          else {
+              var get_data_status_value = userTimeGraph[week_day][hour_range];
+
+              if (get_data_status_value === true) {
+                  input.setAttribute("data-status", "false");
+              }
+
+              else {
+                  input.setAttribute("data-status", "false");
+                  input.style = "background-color: #f59f9f !important;"
+                  input.disabled = true;
+              }
+          }
+
           week_days[i].appendChild(div);
           div.appendChild(input);
       }
@@ -59,28 +76,13 @@ function draw_time_table(){
     // Parsing ID, getting appropriate keys for userTimeGraph object.
     let weekday, time = clickedElement.id.split("_");
 
-    if (request_user_id === requested_user_id) {
+    // if (request_user_id === requested_user_id) {
         if (clickedElement.getAttribute("data-status") == 'false') {
             clickedElement.setAttribute("data-status", 'true');
         }
         else if (clickedElement.getAttribute("data-status")) {
             clickedElement.setAttribute("data-status", 'false');
         }
-    }
-    // if (userTimeGraph['weekday']['time']){
-    //     {% if request.user.pk == object %}
-    //         document.getElementById(clickedElementID).style.backgroundColor = "#949494";
-    //     {% else %}
-    //         document.getElementById(clickedElementID).style.backgroundColor = "green";
-    //     {% endif %}
-    //     let index = allDays.availableDays.indexOf(clickedElement.id);
-    //     allDays.availableDays.splice(index, 1);
-    //     allDays.unavailableDays.push(clickedElementID);
-    // }
-    // else{
-    //     document.getElementById(clickedElementID).style.backgroundColor="green";
-    //     allDays.availableDays.push(clickedElementID);
-    // }
   })
 
 submit_button.addEventListener("click", function() {
@@ -97,14 +99,15 @@ submit_button.addEventListener("click", function() {
 
       let status = inputs[i].getAttribute("data-status");
 
+      if (status === "false") {
+          continue;
+      }
+
       if (!days_data[weekday]) {
           days_data[weekday] = [];
       }
 
-      let obj = {};
-      obj[time] = status
-
-      days_data[weekday].push(obj);
+      days_data[weekday].push(time);
 
   }
   $.ajax(
