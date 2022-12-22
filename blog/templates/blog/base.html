@@ -47,12 +47,8 @@
                    </ul>
                 </li>
              {% elif user.is_authenticated %}
-{#                 {% if user.userstatus.userStatus == 'teacher' %}#}
-                    <li><a href={% url 'userProfile' request.user.pk %}>Profile</a></li>
-{#                 {% elif user.userstatus.userStatus == 'student' %}#}
-{#                     {{ user.userstatus.userStatus }}#}
-{#                     <li><a href={% url 'userProfile' %}>Class Room</a></li>#}
-{#                 {% endif %}#}
+                 <li><a href={% url 'userProfile' request.user.pk %}>Profile</a></li>
+                 <li><a href={% url 'classroom' %}>Class Room</a></li>
                  <li style="padding-top: 12px">
                    <button id="notification-button" type="button" class="icon-button" style="border: none">
 {#                       <span>Messages</span>#}

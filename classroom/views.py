@@ -6,6 +6,7 @@ from users.helpers import get_request_user_profile_model_and_fields, create_fore
 from classroom.services import send_or_approve_booking_request, get_booking_requests
 from classroom.models import *
 from users.helpers import parse_values_from_lists_when_ajax_resp
+from django.db.models import Q
 
 import copy
 import json
@@ -127,3 +128,22 @@ def response_booking(request):
         return HttpResponse(json.dumps({"status": 404}))
 
 
+def classroom(request):
+    lecturers = Relationship.objects.filter(
+            Q(sender=request.user) | Q(receiver=request.user),
+            is_confirmed=True
+        ).values_list("sender", "receiver")
+    lectures_list = []
+    # for lecture in lecturers:
+    #     nearest_lesson = find_nearest_lecture_time(lecture.available_time)
+    #     lectures_list.append({"TeacherObject": lecture, "nearestLesson": nearest_lesson})
+
+    # if request.is_ajax() and request.method == "POST":
+    #     feedback_text = request.POST['feedbackText']
+    #     feedback_rating = int(request.POST['feedbackRating'])
+    #     lecturer_id = int(request.POST['lecturer'])
+    #
+    #     Feedback.objects.create(rating=feedback_rating, textFeedback=feedback_text,
+    #                             sender=request.user, receiver_id=lecturer_id)
+
+    return render(request, 'classroom/classroom.html', {'lecturers': lectures_list})

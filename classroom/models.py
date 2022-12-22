@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator
 from datetime import datetime
 
 
@@ -27,3 +28,20 @@ class Relationship(models.Model):
 
     def __str__(self):
         return f"{self.sender} | {self.receiver} | {self.is_confirmed}"
+
+
+class Feedback(models.Model):
+
+    rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)], null=False)
+    textFeedback = models.TextField(max_length=200, null=False)
+
+    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL,
+                               related_name="feedback_sender")
+
+    receiver = models.ForeignKey(User, null=False, on_delete=models.CASCADE,
+                                 related_name="feedback_receiver")
+
+    record_creation_datetime = models.DateTimeField(editable=False, auto_now=True)
+
+    def __str__(self):
+        return f"{self.sender} to {self.receiver} score : {self.rating}"

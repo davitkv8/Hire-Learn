@@ -98,6 +98,7 @@ def get_user_profile_data(user: User):
     return json.dumps(field_info_with_value)
 
 
+@login_required
 def user_profile_view(request, user_pk=None):
 
     context = {
@@ -150,94 +151,7 @@ def user_profile_view(request, user_pk=None):
                 })
             )
 
-
     return render(request, "users/profile.html", context=context)
-
-
-# class UpdateTeacherProfileView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
-#     template_name = 'users/profile.html'
-#     # context_object_name = 'object'
-#
-#     def dispatch(self, request, *args, **kwargs):
-#         self._specify_fields_data_for_front()
-#
-#         return super(UpdateTeacherProfileView, self).dispatch(
-#             request, *args, **kwargs)
-#
-#     def get_queryset(self):
-#         pk = self.kwargs.get(self.pk_url_kwarg)
-#
-#         queryset = self._user_profile_model().objects.filter(
-#             user_id=pk
-#         )
-#
-#         self.kwargs.update(
-#             {self.pk_url_kwarg: queryset.first().pk}
-#         )
-#
-#         return queryset
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['fields_data'] = get_user_profile_data(self.object)
-#
-#         # context['friendRequest'] = Relationship.objects.filter(receiver=self.object, status='send').all()
-#         # context['hasTimeTable'] = TimeTable.objects.filter(user=self.object.user).first()
-#         # context['feedbacks'] = self.object.feedback.all().order_by('date')[:10]
-#         # context['verification_request'] = email_verification(request=self.request, pk=self.request.user.pk)
-#         return context
-#
-#     def test_func(self):
-#         return self.request.user
-#
-#     def form_valid(self, form):
-#         # form.instance.user = self.request.user
-#         return super().form_valid(form)
-#
-#     def get(self, request, *args, **kwargs):
-#
-#         return super().get(request, *args, **kwargs)
-#
-#     def post(self, request, *args, **kwargs):
-#         # if request.is_ajax():
-#         #     if request.POST["type"] == "verify_request":
-#         #         email_verification(self.request, request.POST["user"])
-#         #         return HttpResponse()
-#         #
-#         #     rel = Relationship.objects.get(receiver=request.user.teachersprofile,
-#         #                                    sender=request.POST["user"], status="send")
-#         #     if request.POST["type"] == "approve":
-#         #         rel.status = "Approve"
-#         #         rel.save()
-#         #     else:
-#         #         rel.delete()
-#         #
-#         #     return HttpResponse()
-#         # else:
-#         return super().post(request, *args, **kwargs)
-#
-#     def _user_profile_model(self):
-#         return get_request_user_profile_model(self.request)
-#
-#     def _specify_fields_data_for_front(self):
-#         fields_info = self._user_profile_model().specific_fields_for_front()
-#         fields_info = {
-#             key: value for key, value in fields_info.items()
-#             if not fields_info[key].get('non_related_class')
-#            }
-#
-#         self.fields = [
-#             field for field in fields_info
-#             if fields_info[field]['editable']
-#         ]
-#
-#         self.readonly_fields = [
-#             field for field in fields_info
-#             if not fields_info[field]['editable']
-#         ]
-#
-#     def get_success_url(self):
-#         return reverse('teacher-profile', kwargs={'pk': self.object.pk})
 
 
 class Login(LoginView):
@@ -284,6 +198,7 @@ def get_registration_field_namings(request):
     return HttpResponse(json.dumps(helpers))
 
 
+@login_required
 def hash_tags(request):
 
     if request.method == "POST":
@@ -354,6 +269,7 @@ def complete_user_registration(request, pk):  # User's Primary key
                   {'form': form, 'full_name': user_full_name})
 
 
+@login_required
 def string_matcher(request):
 
     user_input = request.GET['inputData']
@@ -369,6 +285,3 @@ def string_matcher(request):
             }
         )
     )
-
-
-
