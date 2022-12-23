@@ -16,22 +16,22 @@
 {% block content %}
 
 
-{% for teacher in teachers %}
+{% for card_data in cards_data %}
 
-      <div class="container mt-5 justify-content-center" id="teachersDemo">
+      <div class="container mt-5 justify-content-center" id="card_dataDemo">
         <div class="card p-3">
             <div class="d-flex align-items-center">
                 <div class="image">
-                    <img src="{{ teacher.profile_pic }}"
-                                         alt="lecture-image" class="rounded" width="155">
+                    <img src="{{ card_data.image.value }}"
+                                         alt="lecture-image" class="rounded" width="155" style="max-height: 163px">
                 </div>
                 <div class="ml-3 w-100">
 
-                    <h4 class="mb-0 mt-0">{{ teacher.full_name }}</h4>
-                    <span> {{ teacher.title }} </span>
+                    <h4 class="mb-0 mt-0">{{ card_data.full_name.value }}</h4>
+                    <span> {{ card_data.title.value }} </span>
                     <div class="p-2 mt-2 d-flex justify-content-between rounded text-white stats" style="background-color: green!important;">
                         <div class="d-flex flex-column">
-                            <span class="articles">{{ teacher.next_lesson }}</span>
+                            <span class="articles">{{ card_data.next_lesson }}</span>
                             <span class="number1">Homeworks aren't available</span>
                         </div>
                     </div>

@@ -24,7 +24,7 @@
         <div class="alert alert-success" role="alert">
             You've new request from <a href="{% url 'userProfile' booking.sender.id  %}">
             {{ booking.sender.username }}</a> - see offered times <a target="_blank"
-                href="/classroom/time_table/?booking_pk=2">Here</a>
+                href="/classroom/time_table/?booking_pk={{ booking.pk }}">Here</a>
             <button type="button" class="btn btn-success"
                     value="true" data-sender_id={{ booking.sender.id }}
                     onclick="func(this)">Approve</button>

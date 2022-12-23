@@ -21,7 +21,7 @@
 }
 
 
-#teachersDemo {
+#card_dataDemo {
   width: min-content;
-  display: inline-block;
+  display: inline-table;
 }

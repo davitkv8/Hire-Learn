@@ -3,14 +3,18 @@
 """
 import imghdr
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.fields.related import ForeignKey
-from django.shortcuts import redirect
-from django.urls import reverse
+from django.contrib.auth.models import User
+
 from users.namings import (
             VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE,
             VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE,
-            FOREIGN_KEY_FIELDS
+            FOREIGN_KEY_FIELDS,
+            M2M_FIELDS
         )
+
+from datetime import datetime, date, time
+from copy import deepcopy
+import json
 
 FIELDS_TO_BE_IGNORED = [
     'user_status',
@@ -99,3 +103,54 @@ def create_foreign_keys_where_necessary(model_class, data):
                 continue
 
     return data
+
+
+def get_user_profile_data(user: User, only_certain_fields=None, as_dict=False):
+    data = get_request_user_profile_model_and_fields(user)
+
+    user_profile_obj = data['profile_obj']
+    fields = only_certain_fields or data['front_fields']
+
+    field_info_with_value = []
+
+    for field in fields:
+
+        try:
+            value = getattr(user_profile_obj, field)
+
+        except AttributeError:
+            value = getattr(user, field)
+
+        # If value is model method
+        if callable(value):
+            try:
+                value = value()
+            # ManyRelated comes with __call__ method
+            except TypeError:
+                pass
+
+        # If value is foreign key instance, which is not created yet
+        if value is None:
+            fields[field]['value'] = value
+            field_info_with_value.append({field: fields[field]})
+            continue
+
+        if field in M2M_FIELDS:
+            value = [i for i in value.values_list(field, flat=True)]
+
+        if field in FOREIGN_KEY_FIELDS:
+            value = getattr(value, field)
+
+        if field == "image":
+            value = getattr(value, field).url
+
+        if type(value) in [datetime, date, time]:
+            value = value.strftime("%Y-%m-%d")
+
+        fields[field]['value'] = value
+        field_info_with_value.append({field: fields[field]})
+
+    if as_dict:
+        return deepcopy(fields)
+
+    return json.dumps(field_info_with_value)

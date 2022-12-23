@@ -6,9 +6,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from datetime import datetime, time, date
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
 
@@ -19,7 +17,8 @@ from users.models import UserStatus, TeacherProfile, Image, StudentProfile, Hash
 
 from .helpers import parse_values_from_lists_when_ajax_resp,\
     validate_image, create_foreign_keys_where_necessary,\
-    get_request_user_profile_model_and_fields
+    get_request_user_profile_model_and_fields,\
+    get_user_profile_data
 
 from classroom.services import get_booking_requests
 
@@ -48,54 +47,6 @@ def get_names(request):
             'payload': payload,
         })
     )
-
-
-def get_user_profile_data(user: User):
-    data = get_request_user_profile_model_and_fields(user)
-
-    user_profile_obj = data['profile_obj']
-    fields = data['front_fields']
-
-    field_info_with_value = []
-
-    for field in fields:
-
-        try:
-            value = getattr(user_profile_obj, field)
-
-        except AttributeError:
-            value = getattr(user, field)
-
-        # If value is model method
-        if callable(value):
-            try:
-                value = value()
-            # ManyRelated comes with __call__ method
-            except TypeError:
-                pass
-
-        # If value is foreign key instance, which is not created yet
-        if value is None:
-            fields[field]['value'] = value
-            field_info_with_value.append({field: fields[field]})
-            continue
-
-        if field in M2M_FIELDS:
-            value = [i for i in value.values_list(field, flat=True)]
-
-        if field in FOREIGN_KEY_FIELDS:
-            value = getattr(value, field)
-
-        if field == "image":
-            value = "/users" + getattr(value, field).url
-
-        if type(value) in [datetime, date, time]:
-            value = value.strftime("%Y-%m-%d")
-
-        fields[field]['value'] = value
-        field_info_with_value.append({field: fields[field]})
-
-    return json.dumps(field_info_with_value)
 
 
 @login_required
