@@ -19,3 +19,9 @@
   font-size: 10px;
   font-weight: 500
 }
+
+
+#teachersDemo {
+  width: min-content;
+  display: inline-block;
+}

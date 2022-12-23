@@ -3,7 +3,7 @@ from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
-from classroom.services import send_or_approve_booking_request, get_booking_requests
+from classroom.services import send_or_approve_booking_request, get_booking_requests, get_nearest_lesson
 from classroom.models import *
 from users.helpers import parse_values_from_lists_when_ajax_resp
 from django.db.models import Q
@@ -129,14 +129,22 @@ def response_booking(request):
 
 
 def classroom(request):
-    lecturers = Relationship.objects.filter(
+    rels = Relationship.objects.filter(
             Q(sender=request.user) | Q(receiver=request.user),
             is_confirmed=True
-        ).values_list("sender", "receiver")
-    lectures_list = []
-    # for lecture in lecturers:
-    #     nearest_lesson = find_nearest_lecture_time(lecture.available_time)
-    #     lectures_list.append({"TeacherObject": lecture, "nearestLesson": nearest_lesson})
+        )
+
+    teachers = []
+
+    for rel in rels:
+        teachers.append({
+            "full_name": rel.receiver.basicabstractprofile.teacherprofile.full_name,
+            "profile_pic": rel.receiver.basicabstractprofile.teacherprofile.image.image.url,
+            "title": rel.receiver.basicabstractprofile.teacherprofile.title.title,
+            "next_lesson": get_nearest_lesson(rel.agreed_days)
+        })
+
+    teachers = sorted(teachers, key=lambda x: x['next_lesson'])
 
     # if request.is_ajax() and request.method == "POST":
     #     feedback_text = request.POST['feedbackText']
@@ -146,4 +154,4 @@ def classroom(request):
     #     Feedback.objects.create(rating=feedback_rating, textFeedback=feedback_text,
     #                             sender=request.user, receiver_id=lecturer_id)
 
-    return render(request, 'classroom/classroom.html', {'lecturers': lectures_list})
+    return render(request, 'classroom/classroom.html', {'teachers': teachers})

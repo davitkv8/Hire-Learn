@@ -16,32 +16,36 @@
 {% block content %}
 
 
-{% for lecture in lecturers %}
+{% for teacher in teachers %}
 
-      <div class="container mt-5 justify-content-center">
+      <div class="container mt-5 justify-content-center" id="teachersDemo">
         <div class="card p-3">
             <div class="d-flex align-items-center">
-                <div class="image"> <img src="{{ lecture.TeacherObject.receiver.image.url }}"
-                                         alt="lecture-image" class="rounded" width="155"> </div>
+                <div class="image">
+                    <img src="{{ teacher.profile_pic }}"
+                                         alt="lecture-image" class="rounded" width="155">
+                </div>
                 <div class="ml-3 w-100">
 
-                    <h4 class="mb-0 mt-0">{{ lecture.TeacherObject.receiver.full_name }}</h4>
-                    <span>{{ lecture.TeacherObject.receiver.subject }}</span>
+                    <h4 class="mb-0 mt-0">{{ teacher.full_name }}</h4>
+                    <span> {{ teacher.title }} </span>
                     <div class="p-2 mt-2 d-flex justify-content-between rounded text-white stats" style="background-color: green!important;">
                         <div class="d-flex flex-column">
-                            <span class="articles">{{ lecture.nearestLesson }}</span>
+                            <span class="articles">{{ teacher.next_lesson }}</span>
                             <span class="number1">Homeworks aren't available</span>
                         </div>
                     </div>
                     <div class="button mt-2 d-flex flex-row align-items-center">
                         <button class="btn btn-sm btn-outline-primary w-100" type="submit">
 {#                        <a href="{% url 'redirecter' request.user.username lecture.TeacherObject.receiver.user.username %}">Chat</a>#}
+                          <a>Chat</a>
                         </button>
 
                         <button class="btn btn-sm btn-outline-primary w-100 start-btn"
                                 onclick="getClickedLecturer({{ lecture.TeacherObject.receiver.pk }})">Feedback</button>
                     </div>
                 </div>
+
             </div>
         </div>
       </div>
