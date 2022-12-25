@@ -6,8 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
 from users.namings import (
-            VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE,
-            VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE,
+            VISIBLE_FIELDS_IN_USERS_PROFILE_PAGE,
             FOREIGN_KEY_FIELDS,
             M2M_FIELDS
         )
@@ -23,39 +22,20 @@ FIELDS_TO_BE_IGNORED = [
 
 def get_request_user_profile_model_and_fields(user):
 
-    abstract_profile_class = user.basicabstractprofile
+    profile_model = user.userprofile
 
-    # Just checking, if user has studentProfile or teacherProfile inheritance
-    # And getting appropriate model class (not instance!)
     try:
-        model_class = abstract_profile_class.studentprofile._meta.model
-        front_fields = VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE
-
-        profile_obj = getattr(
-            user.basicabstractprofile,
-            model_class.__name__.lower()
-        )
+        model_class = profile_model._meta.model
+        front_fields = VISIBLE_FIELDS_IN_USERS_PROFILE_PAGE
 
         return {
             "model_class": model_class,
             "front_fields": front_fields,
-            "profile_obj": profile_obj
+            "profile_obj": profile_model
         }
 
     except ObjectDoesNotExist:
-        model_class = abstract_profile_class.teacherprofile._meta.model
-        front_fields = VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE
-
-        profile_obj = getattr(
-            user.basicabstractprofile,
-            model_class.__name__.lower()
-        )
-
-        return {
-            "model_class": model_class,
-            "front_fields": front_fields,
-            "profile_obj": profile_obj
-        }
+        return None
 
 
 def parse_values_from_lists_when_ajax_resp(obj: dict) -> dict:

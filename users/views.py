@@ -8,12 +8,11 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 
-from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
+from .forms import UserRegisterForm, UserProfileForm
 
-from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT,\
-    TEACHER_FIELD_IDS_IN_FRONT, M2M_FIELDS, FOREIGN_KEY_FIELDS
+from .namings import PROFILE_FIELD_IDS_IN_FRONT, FOREIGN_KEY_FIELDS
 
-from users.models import UserStatus, TeacherProfile, Image, StudentProfile, HashTag
+from users.models import UserProfile, Image, HashTag
 
 from .helpers import parse_values_from_lists_when_ajax_resp,\
     validate_image, create_foreign_keys_where_necessary,\
@@ -47,6 +46,13 @@ def get_names(request):
             'payload': payload,
         })
     )
+
+
+def get_registration_field_namings(request):
+
+    helpers = PROFILE_FIELD_IDS_IN_FRONT
+
+    return HttpResponse(json.dumps(helpers))
 
 
 @login_required
@@ -118,17 +124,15 @@ def register(request):
     if request.user.is_authenticated:
         return redirect("main-view")
 
-    form = TeacherRegisterForm
+    form = UserRegisterForm
     if request.method == 'POST':
-        form = TeacherRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
 
             user_data = form.cleaned_data
 
             registered_user = User.objects.get(username=user_data['username'])
-
-            UserStatus.objects.create(user=registered_user, userStatus=request.POST['userStatus'])
 
             new_user = authenticate(username=user_data['username'],
                                     password=user_data['password1'],
@@ -138,15 +142,6 @@ def register(request):
             return redirect('complete-user', registered_user.pk)
 
     return render(request, 'users/register.html', {'form': form})
-
-
-def get_registration_field_namings(request):
-    if request.user.userstatus.userStatus == 'student':
-        helpers = STUDENT_PROFILE_FIELD_IDS_IN_FRONT
-    else:
-        helpers = TEACHER_FIELD_IDS_IN_FRONT
-
-    return HttpResponse(json.dumps(helpers))
 
 
 @login_required
@@ -169,7 +164,7 @@ def hash_tags(request):
                 HashTag.objects.filter(hashTag__in=data)
             )
 
-            request.user.basicabstractprofile.hashTag.add(
+            request.user.userprofile.hashTag.add(
                 *committed_and_saved_data
             )
 
@@ -189,13 +184,7 @@ def complete_user_registration(request, pk):  # User's Primary key
     if request.user.pk != pk:
         return redirect('main-view')
 
-    user_status = UserStatus.objects.get(user=request.user).userStatus
-
-    if user_status == 'student':
-        form = StudentProfileForm
-
-    else:
-        form = TeacherProfileForm
+    form = UserProfileForm
 
     if request.method == 'POST':
 
@@ -214,7 +203,7 @@ def complete_user_registration(request, pk):  # User's Primary key
 
         return JsonResponse(status=302, data={'success': url})
 
-    user_full_name = request.user.first_name + ' ' + request.user.last_name
+    user_full_name = request.user.first_name + '' + request.user.last_name
     # return redirect("register")
     return render(request, 'users/complete_user.html',
                   {'form': form, 'full_name': user_full_name})

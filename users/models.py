@@ -39,18 +39,6 @@ class Title(models.Model):
         return self.title
 
 
-class UserStatus(models.Model):
-    userStatus = models.CharField(max_length=55, choices=(
-        ('student', 'student'),
-        ('teacher', 'teacher')
-    ))
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __repr__(self):
-        return f"{self.userStatus}"
-
-
 class Platform(models.Model):
     platform_choices = (
         ('', ''),
@@ -69,7 +57,7 @@ class Platform(models.Model):
         return self.platform
 
 
-class BasicAbstractProfile(models.Model):
+class UserProfile(models.Model):
     description = models.TextField(blank=False, null=True, max_length=6000)
     hashTag = models.ManyToManyField(HashTag)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True)
@@ -77,27 +65,6 @@ class BasicAbstractProfile(models.Model):
     is_active = models.BooleanField(default=False)
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
     record_creation_datetime = models.DateTimeField(editable=True, auto_now=True)
-
-    user_status = models.ForeignKey(UserStatus, editable=False, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
-
-    def save(self, *args, **kwargs):
-        self.user_status = self.user.userstatus
-        super().save(*args, **kwargs)
-
-    def get_description(self):
-        return self.description[:300]
-
-    def __repr__(self):
-        return f"{self.user.username}"
-
-
-class StudentProfile(BasicAbstractProfile):
-    def __repr__(self):
-        return f"{self.user.username}"
-
-
-class TeacherProfile(BasicAbstractProfile):
     birth_date = models.DateField(blank=False, null=False)
     full_name = models.CharField(blank=False, null=False, max_length=55)
     lecture_price = models.FloatField(
@@ -110,10 +77,8 @@ class TeacherProfile(BasicAbstractProfile):
     platform = models.ForeignKey(Platform, on_delete=models.SET_NULL,
                                  blank=False, null=True, max_length=55)
 
-    def __str__(self):
-        return f"{self.full_name}'s Profile."
+    user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
 
-    #
     def get_relationship_counts(self):
         return Relationship.objects.filter(
             Q(sender=self.user) | Q(receiver=self.user),
@@ -135,4 +100,8 @@ class TeacherProfile(BasicAbstractProfile):
     #         sum_rating += feedback.rating
     #     return round(sum_rating/self.get_feedbacks_number(), 1)
 
+    def get_description(self):
+        return self.description[:300]
 
+    def __repr__(self):
+        return f"{self.user.username}"

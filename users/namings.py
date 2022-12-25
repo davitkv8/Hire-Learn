@@ -1,41 +1,7 @@
-from users.forms import StudentProfileForm, TeacherProfileForm
-from django.contrib.auth.models import User
+from users.forms import UserProfileForm
 from users.models import *
 
-VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE = {
-    "username": {
-        "name_in_front": "Username",
-        "editable": True,
-        "field_type": "string",
-    },
-
-    "description": {
-        "name_in_front": "Description",
-        "editable": True,
-        "field_type": "string",
-    },
-
-    "hashTag": {
-        "name_in_front": "Tags",
-        "editable": False,
-        "field_type": "selection+",
-    },
-
-    "image": {
-        "name_in_front": "Profile Picture",
-        "editable": True,
-        "field_type": "string",
-    },
-
-    "record_creation_datetime": {
-        "name_in_front": "Since",
-        "editable": False,
-        "field_type": "datetime",
-    }
-}
-
-
-VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
+VISIBLE_FIELDS_IN_USERS_PROFILE_PAGE = {
 
     "full_name": {
         "name_in_front": "Full Name",
@@ -113,18 +79,12 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
 }
 
 
-STUDENT_PROFILE_FIELD_IDS_IN_FRONT = {
-    field: "id_" + field for field in StudentProfileForm.Meta.fields
-}
-
-
-TEACHER_FIELD_IDS_IN_FRONT = {
-    field: "id_" + field for field in TeacherProfileForm.Meta.fields
+PROFILE_FIELD_IDS_IN_FRONT = {
+    field: "id_" + field for field in UserProfileForm.Meta.fields
 }
 
 
 FOREIGN_KEY_FIELDS = {
-    "user_status": UserStatus,
     "title": Title,
     "platform": Platform,
     "timeGraph": TimeGraph,

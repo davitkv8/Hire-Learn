@@ -11,6 +11,7 @@ function getFieldNamings() {
     success: function (data) {
         console.log("AJAX")
         fields = data;
+        console.log(data);
     },
     error: function (e) {
       console.log("There was an error with your request")

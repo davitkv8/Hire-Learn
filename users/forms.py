@@ -4,10 +4,10 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from users.models import TeacherProfile, StudentProfile, Platform
+from users.models import UserProfile, Platform
 
 
-class TeacherRegisterForm(UserCreationForm):
+class UserRegisterForm(UserCreationForm):
     email = models.EmailField(unique=True, null=False, blank=False)
 
     class Meta:
@@ -23,10 +23,10 @@ class TeacherRegisterForm(UserCreationForm):
             raise ValidationError("Email exists")
 
 
-class TeacherProfileForm(forms.ModelForm):
+class UserProfileForm(forms.ModelForm):
 
     class Meta:
-        model = TeacherProfile
+        model = UserProfile
         fields = ['birth_date', 'full_name', 'lecture_price',
                   'description', 'platform', 'title']
         widgets = {
@@ -36,20 +36,9 @@ class TeacherProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         # user = kwargs.pop('user', '')
-        super(TeacherProfileForm, self).__init__(*args, **kwargs)
+        super(UserProfileForm, self).__init__(*args, **kwargs)
 
         self.fields['platform'] = forms.ModelChoiceField(
             queryset=Platform.objects.all().values_list('platform', flat=True)
         )
-
-
-class StudentProfileForm(forms.ModelForm):
-
-    class Meta:
-        model = StudentProfile
-        fields = ['description']
-        widgets = {
-            # 'birth_date': forms.DateInput(attrs={'required': 'required', 'type': 'date'}),
-            'description': forms.Textarea(attrs={"style": "resize: none"})
-        }
 

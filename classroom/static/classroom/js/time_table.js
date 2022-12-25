@@ -67,10 +67,6 @@ function draw_time_table(){
                   }
 
               }
-
-
-              // if one user checking other user's time graph (student booking for teacher)
-              // then, student is able to choose only fields where teacher has available times.
               else {
                   var get_data_status_value = userTimeGraph[week_day][hour_range];
 

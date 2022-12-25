@@ -2,9 +2,6 @@ from django.shortcuts import render, redirect
 
 
 def main_view(request):
-    if request.user.is_authenticated:
-        if request.user.userstatus.userStatus == 'None':
-            return redirect('user-status')
 
     if request.method == "POST":
         title = request.POST['title']

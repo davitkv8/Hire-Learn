@@ -86,22 +86,6 @@
       <script>
       document.getElementById("feedback-text").required = true;
 
-      {#function redirectToChat(lecturer_username, student_username){#}
-      {#    let room_name = JSON.stringify(lecturer_username + '_' + student_username)#}
-      {#    console.log(room_name)#}
-      {#  $.ajax(#}
-      {#          {#}
-      {#              url: "{% url 'chat_room' 1 %}",#}
-      {#              type: 'POST',#}
-      {#              data: {#}
-      {#              room_name: room_name,#}
-      {#              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()#}
-      {#          },#}
-      {#              success: function (response){#}
-      {#          }#}
-      {#       });#}
-      {#}#}
-
          $(document).ready(function(){
            $('.start-btn').click(function(){
              $('.modal-box').toggleClass("show-modal");
