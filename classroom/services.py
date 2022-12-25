@@ -8,7 +8,7 @@ WEEK_DAYS = (
 )
 
 
-def send_or_approve_booking_request(
+def create_booking_request(
         sender_id: "User PK", receiver_id: "User PK",
         agreed_days: dict, is_confirmed: bool = False,
 ):

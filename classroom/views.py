@@ -3,7 +3,7 @@ from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
-from classroom.services import send_or_approve_booking_request, get_booking_requests, get_nearest_lesson
+from classroom.services import create_booking_request, get_booking_requests, get_nearest_lesson
 from classroom.namings import TEACHER_CARD_FIELDS_DATA
 from classroom.models import *
 from users.helpers import parse_values_from_lists_when_ajax_resp, get_user_profile_data
@@ -16,6 +16,33 @@ import json
 TEMPLATE_DAYS_DATA = json.load(
     open('template_days_data.json')
 )
+
+
+def send_booking_request(request):
+
+    data = json.loads(request.POST['data'])
+
+    requested_user_id, request_user_id, time_graph_data = data.values()
+
+    try:
+        # student sending request to teacher case
+        if request_user_id != requested_user_id:
+            create_booking_request(
+                request_user_id, requested_user_id, time_graph_data
+            )
+
+        return HttpResponse(json.dumps({
+            "status": 200,
+            "message": "Your request has successfully sent to teacher\n"
+                       "We will notify you on E-mail when teacher will give a response back to you.",
+        }))
+
+    except Exception as e:
+        print(e)
+        return HttpResponse(json.dumps({
+            "status": 404,
+            "message": "There was error with your request",
+        }))
 
 
 class AjaxTimeTable(LoginRequiredMixin, View):
@@ -57,7 +84,7 @@ class AjaxTimeTable(LoginRequiredMixin, View):
 
         return render(request, 'classroom/time_table.html', context=context)
 
-    def post(self, request, user_pk):
+    def post(self, request):
         template_data = copy.deepcopy(TEMPLATE_DAYS_DATA)
 
         time_graph_data = json.loads(request.POST['days_data'])
@@ -70,16 +97,6 @@ class AjaxTimeTable(LoginRequiredMixin, View):
         for key, list_value in time_graph_data.items():
             for key_value in list_value:
                 template_data[key][key_value] = True
-
-        request_user_id = request.user.id
-        requested_user_id = int(user_pk)
-
-        # student sending request to teacher case
-        if request_user_id != requested_user_id:
-
-            send_or_approve_booking_request(
-                request_user_id, requested_user_id, time_graph_data
-            )
 
         try:
             profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
@@ -116,6 +133,22 @@ def response_booking(request):
         )
 
         rel_obj.update(**data)
+
+        if data['is_confirmed']:
+            rel = rel_obj.first()
+            agreed_days = rel.agreed_days
+
+            receiver_time_graph, sender_time_graph = [
+                rel.receiver.basicabstractprofile.timeGraph,
+                rel.sender.basicabstractprofile.timeGraph,
+            ]
+
+            for week_day, hours_list in agreed_days.items():
+                for hour in hours_list:
+                    receiver_time_graph.timeGraph[week_day][hour] = False
+                    # sender_time_graph.timeGraph[week_day][hour] = rel.receiver
+
+            receiver_time_graph.save()
 
         return HttpResponse(json.dumps(
             {

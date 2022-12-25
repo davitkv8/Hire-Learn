@@ -131,19 +131,45 @@ submit_button.addEventListener("click", function() {
       days_data[weekday].push(time);
 
   }
-  $.ajax(
-    {
-        url: `/classroom/time_table/${requested_user_id}/`,
-        type: 'POST',
-        data: {
-        days_data: JSON.stringify(days_data),
-        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-    },
-    success: function (response){
-            let resp = JSON.parse(response);
-            alert(resp.message);
-    }
-  });
+
+  if (request_user_id === requested_user_id) {
+      $.ajax(
+          {
+              url: `/classroom/time_table/`,
+              type: 'POST',
+              data: {
+                  days_data: JSON.stringify(days_data),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function (response) {
+                  let resp = JSON.parse(response);
+                  alert(resp.message);
+              }
+          });
+  }
+
+  else {
+
+      var data = {
+          "requested_user_id": requested_user_id,
+          "request_user_id": request_user_id,
+          "days_data": days_data,
+      }
+
+      $.ajax(
+          {
+              url: `/classroom/send_booking_request/`,
+              type: 'POST',
+              data: {
+                  data: JSON.stringify(data),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function (response) {
+                  let resp = JSON.parse(response);
+                  alert(resp.message);
+              }
+          });
+  }
 
 });
 
