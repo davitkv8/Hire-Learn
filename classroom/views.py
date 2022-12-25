@@ -31,10 +31,10 @@ class AjaxTimeTable(LoginRequiredMixin, View):
 
             for key, list_value in agreed_days.items():
                 for key_value in list_value:
-                    self.template_data[key][key_value] = True
+                    template_data[key][key_value] = True
 
             context = {
-                "days_data": self.template_data
+                "days_data": template_data
             }
 
             return render(request, "classroom/time_table.html", context=context)
@@ -58,6 +58,8 @@ class AjaxTimeTable(LoginRequiredMixin, View):
         return render(request, 'classroom/time_table.html', context=context)
 
     def post(self, request, user_pk):
+        template_data = copy.deepcopy(TEMPLATE_DAYS_DATA)
+
         time_graph_data = json.loads(request.POST['days_data'])
 
         # incoming data -> {monday: [{'0:00-1:00': 'false'}, {'1:00-2:00': 'false'}, ...]}
@@ -67,7 +69,7 @@ class AjaxTimeTable(LoginRequiredMixin, View):
 
         for key, list_value in time_graph_data.items():
             for key_value in list_value:
-                self.template_data[key][key_value] = True
+                template_data[key][key_value] = True
 
         request_user_id = request.user.id
         requested_user_id = int(user_pk)
@@ -83,7 +85,7 @@ class AjaxTimeTable(LoginRequiredMixin, View):
             profile_model = get_request_user_profile_model_and_fields(request.user)['model_class']
             data = create_foreign_keys_where_necessary(
                 profile_model,
-                {"timeGraph": self.template_data}
+                {"timeGraph": template_data}
             )
 
             profile_model.objects.filter(user=request.user).update(

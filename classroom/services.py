@@ -52,7 +52,7 @@ def get_nearest_lesson(*args):
 
                 lesson_time = user_lessons_graph_dict[week_day][0].split(":")
 
-                lesson_datetime = today + timedelta(days=days_remaining_to_next_lesson - 1)
+                lesson_datetime = today + timedelta(days=days_remaining_to_next_lesson)
                 lesson_datetime = lesson_datetime.replace(
                     hour=int(lesson_time[0]), minute=int(lesson_time[-1])
                 )
