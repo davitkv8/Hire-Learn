@@ -5,6 +5,19 @@ from datetime import datetime
 
 
 class TimeGraph(models.Model):
+    """
+        To understand how this JSONField stores data, please check template_days_data.json
+        "0:00-1:00":"false", "1:00-2:00":"true", "2:00-3:00":"User John Smith"
+        here, false means that user has blocked this timegraph that he is not taking requests for these times.
+        For example : {
+            monday: {"0:00-1:00":"false", "1:00-2:00":"true"}
+        }
+        means that, this teacher has not free time on monday in this range "0:00-1:00",
+        but on "1:00-2:00" he is able to take requests.
+
+        "2:00-3:00" at this time, he has already booked lessons from user John Smith
+    """
+
     timeGraph = models.JSONField("Time Graph", null=True, blank=False)
     record_creation_datetime = models.DateTimeField(editable=False, auto_now=True)
 
