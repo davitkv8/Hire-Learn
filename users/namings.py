@@ -103,6 +103,18 @@ VISIBLE_FIELDS_IN_TEACHERS_PROFILE_PAGE = {
         "field_type": "int",
     },
 
+    "get_feedbacks_count": {
+        "name_in_front": "Feedbacks",
+        "editable": False,
+        "field_type": "int",
+    },
+
+    "get_rating": {
+        "name_in_front": "Rating",
+        "editable": False,
+        "field_type": "int",
+    },
+
     "timeGraph": {
         "name_in_front": "You have not set time graph yet."
                          "please, set it to be visible for other users.",

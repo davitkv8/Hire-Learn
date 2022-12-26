@@ -21,6 +21,7 @@ from .helpers import parse_values_from_lists_when_ajax_resp,\
     get_user_profile_data
 
 from classroom.services import get_booking_requests
+from classroom.models import *
 
 @login_required
 def get_names(request):
@@ -67,6 +68,12 @@ def user_profile_view(request, user_pk=None):
             **{"receiver_id": requested_user.id, "is_confirmed": False}
         )
 
+        context["feedbacks"] = Feedback.objects.filter(
+            receiver=request.user
+        )
+
+        return render(request, "users/profile.html", context=context)
+
     if request.method == "POST":
         try:
 
@@ -101,8 +108,6 @@ def user_profile_view(request, user_pk=None):
                     "message": "Please, fill in correct data"
                 })
             )
-
-    return render(request, "users/profile.html", context=context)
 
 
 class Login(LoginView):

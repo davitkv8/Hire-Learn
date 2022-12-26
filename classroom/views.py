@@ -164,6 +164,34 @@ def response_booking(request):
         return HttpResponse(json.dumps({"status": 404}))
 
 
+@login_required
+def leave_feedback(request):
+    data = parse_values_from_lists_when_ajax_resp(request.POST)
+    obj, created = Feedback.objects.get_or_create(
+        receiver_id=data["receiver_id"],
+        sender_id=data["sender_id"],
+
+        defaults={
+            **data,
+        }
+    )
+    print(f"FEEDBACK CREATED {created}")
+    if created:
+        return HttpResponse(
+            json.dumps({
+                "status": 200,
+                "message": "Thank you for sharing your experience!"
+            })
+        )
+
+    return HttpResponse(
+        json.dumps({
+            "status": 404,
+            "message": "You have already left feedback"
+        })
+    )
+
+
 def classroom(request):
     rels = Relationship.objects.filter(
             Q(sender=request.user) | Q(receiver=request.user),
@@ -178,16 +206,9 @@ def classroom(request):
             )
 
         data["next_lesson"] = get_nearest_lesson(rel.agreed_days)
+        data["pk"] = rel.receiver_id
         cards_data.append(data)
 
     cards_data = sorted(cards_data, key=lambda x: x['next_lesson'])
-
-    # if request.is_ajax() and request.method == "POST":
-    #     feedback_text = request.POST['feedbackText']
-    #     feedback_rating = int(request.POST['feedbackRating'])
-    #     lecturer_id = int(request.POST['lecturer'])
-    #
-    #     Feedback.objects.create(rating=feedback_rating, textFeedback=feedback_text,
-    #                             sender=request.user, receiver_id=lecturer_id)
 
     return render(request, 'classroom/classroom.html', {'cards_data': cards_data})

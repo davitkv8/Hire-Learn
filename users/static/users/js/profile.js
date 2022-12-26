@@ -4,7 +4,7 @@ const user_fields_div_rows = ["full_name", 'birth_date', 'email',
         'lecture_price', 'platform', 'hashTag', "title"];
 
 const user_feedback_fields = ["get_relationship_counts",
-    "feedbacks", "rating", "record_creation_datetime"];
+    "get_feedbacks_count", "get_rating", "record_creation_datetime"];
 
 var editable_fields = [];
 var autocomplete_fields = [];

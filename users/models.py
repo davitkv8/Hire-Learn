@@ -119,20 +119,23 @@ class TeacherProfile(BasicAbstractProfile):
             Q(sender=self.user) | Q(receiver=self.user),
             is_confirmed=True
         ).count()
-    #
-    # def get_friends_number(self):
-    #     return self.friends.all().count()
-    #
-    # def get_feedbacks_number(self):
-    #     return self.feedback.all().count()
-    #
-    # def feedback_rating(self):
-    #     sum_rating = 0
-    #     all_feedbacks = self.feedback.all()
-    #     if self.get_feedbacks_number() == 0:
-    #         return 0
-    #     for feedback in all_feedbacks:
-    #         sum_rating += feedback.rating
-    #     return round(sum_rating/self.get_feedbacks_number(), 1)
+
+    def get_feedbacks_count(self):
+        return Feedback.objects.filter(
+            receiver=self.user
+        ).count()
+
+    def get_rating(self):
+
+        if self.get_feedbacks_count() == 0:
+            return 0
+
+        all_feedbacks = set(
+            Feedback.objects.filter(
+                receiver=self.user
+            ).values_list("rating", flat=True)
+        )
+
+        return sum(all_feedbacks) / len(all_feedbacks)
 
 

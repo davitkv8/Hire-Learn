@@ -84,7 +84,7 @@
 
 .wrapper{
   background: #f6f6f6;
-  max-width: 360px;
+  /*max-width: 360px;*/
   width: 100%;
   border-radius: 10px;
   box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
@@ -157,10 +157,10 @@
   content: "0 out of 5";
 }
 
-.footer{
-  margin-left: 33px;
-  margin-top: 200px;
-}
+/*.footer{*/
+/*  margin-left: 33px;*/
+/*  margin-top: 200px;*/
+/*}*/
 
 #star-1:checked ~ .footer .numb::before{
   content: "1 out of 5";
@@ -182,5 +182,10 @@
 }
 input[type="radio"]{
   display: none;
+}
+
+#feedback-text {
+  outline: none;
+  border: none;
 }
 

@@ -7,4 +7,5 @@ urlpatterns = [
     re_path(r'^send_booking_request/$', send_booking_request, name="send_booking_request"),
     re_path(r'^response_booking/$', response_booking, name="response_booking"),
     path('classroom/', classroom, name='classroom'),
+    path('leave_feedback/', leave_feedback, name='leave_feedback'),
 ]

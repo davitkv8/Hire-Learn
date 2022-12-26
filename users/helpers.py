@@ -65,13 +65,13 @@ def parse_values_from_lists_when_ajax_resp(obj: dict) -> dict:
             "false": False,
         }
 
-        if value in bool_variations:
-            return bool_variations[value]
+        if value[0] in bool_variations:
+            return bool_variations[value[0]]
 
         return value
 
     return {
-        key.replace("[]", ""): convert_to_correct_dt(value[0])
+        key.replace("[]", ""): convert_to_correct_dt(value)
         for key, value in obj.items() if key != 'csrfmiddlewaretoken'
     }
 
