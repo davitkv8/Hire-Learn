@@ -29,7 +29,7 @@ def get_booking_requests(**kwargs):
 
 def get_nearest_lesson(*args):
     """
-        This script returns nearest lesson from iterable,
+        This script returns nearst lesson from iterable,
         for example, if user lessons iterable object is -> {'sunday': ['3:00-4:00'], 'tuesday': ['3:00-4:00']}
         and today is friday, then nearest lesson will be 'sunday': ['3:00-4:00']
     :param args:
