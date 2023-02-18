@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,9 +44,11 @@ INSTALLED_APPS = [
     "classroom.apps.ClassroomConfig",
     'users.apps.UsersConfig',
     'blog.apps.BlogConfig',
-    'chatroom.apps.ChatroomConfig'
+    'chatroom.apps.ChatroomConfig',
     'widget_tweaks',
 ]
+
+ASGI_APPLICATION = "HNL.asgi.application"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,6 +81,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'HNL.wsgi.application'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

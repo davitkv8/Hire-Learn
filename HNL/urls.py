@@ -21,10 +21,17 @@ from django.conf.urls.static import static
 from blog import urls as blog_urls
 from users import urls as user_urls
 from classroom import urls as classroom_urls
+from chatroom import urls as chatroom_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('', include(blog_urls)),
+
     path('users/', include(user_urls)),
+
     path('classroom/', include(classroom_urls)),
+
+    path('chatroom/', include(chatroom_urls)),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
