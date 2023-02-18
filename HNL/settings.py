@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog',
-    'users',
-    "classroom",
+    "classroom.apps.ClassroomConfig",
+    'users.apps.UsersConfig',
+    'blog.apps.BlogConfig',
     'widget_tweaks',
 ]
 
