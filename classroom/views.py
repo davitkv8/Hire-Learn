@@ -134,7 +134,9 @@ def response_booking(request):
             sender_id=data['sender_id']
         )
 
-        rel_obj.update(**data)
+        # Do not use update here, while we need to catch it for signals
+        rel_obj[0].is_confirmed = data['is_confirmed']
+        rel_obj[0].save()
 
         if data['is_confirmed']:
             rel = rel_obj.first()

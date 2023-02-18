@@ -16,13 +16,13 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HNL.settings')
 
-# django_asgi_app = get_asgi_application()
+django_asgi_app = get_asgi_application()
 
 import chatroom.routing
 
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application(),
+        "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
             AuthMiddlewareStack(
                 URLRouter(chatroom.routing.websocket_urlpatterns)

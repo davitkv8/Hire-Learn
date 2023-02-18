@@ -32,13 +32,6 @@ class Relationship(models.Model):
     is_confirmed = models.BooleanField(default=False)
     record_creation_datetime = models.DateTimeField(editable=False, null=True, auto_now=True)
 
-    def save(self, *args, **kwargs):
-
-        if self.is_confirmed is True:
-            self.record_creation_datetime = datetime.now()
-
-        super(Relationship, self).save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.sender} | {self.receiver} | {self.is_confirmed}"
 

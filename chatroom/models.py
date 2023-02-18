@@ -7,4 +7,4 @@ class ChatRoom(models.Model):
     members = models.ManyToManyField(User, blank=False)
 
     def __repr__(self):
-        return f"{self.chatroom} | {self.members}"
+        return f"{self.chatroom} | {set(self.members.all().values_list('username', flat=True))}"
