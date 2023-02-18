@@ -15,7 +15,7 @@ venv/
 *p_venv/
 *node_modules/
 */migrations/
-*.json
+#*.json
 *.csv
 
 # Backup files #
