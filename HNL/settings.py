@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "classroom.apps.ClassroomConfig",
     'users.apps.UsersConfig',
     'blog.apps.BlogConfig',
+    'chatroom.apps.ChatroomConfig'
     'widget_tweaks',
 ]
 
