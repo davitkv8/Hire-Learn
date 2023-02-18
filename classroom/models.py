@@ -30,7 +30,7 @@ class Relationship(models.Model):
     receiver = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name='receiver')
     agreed_days = models.JSONField("Agreed Days", null=True)
     is_confirmed = models.BooleanField(default=False)
-    record_creation_datetime = models.DateTimeField(editable=False, null=True)
+    record_creation_datetime = models.DateTimeField(editable=False, null=True, auto_now=True)
 
     def save(self, *args, **kwargs):
 

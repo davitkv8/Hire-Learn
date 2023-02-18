@@ -69,3 +69,9 @@ def get_nearest_lesson(*args):
                 return None
 
             days_remaining_to_next_lesson += 1
+
+
+def default_json_serializer(obj):
+    if isinstance(obj, (datetime, date, time)):
+        return obj.isoformat()
+    raise TypeError("Type %s not serializable" % type(obj))

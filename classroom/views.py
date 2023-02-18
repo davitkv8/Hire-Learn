@@ -3,8 +3,10 @@ from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
+from users.models import TeacherProfile, StudentProfile
 from classroom.services import create_booking_request, get_booking_requests, get_nearest_lesson
 from classroom.namings import TEACHER_CARD_FIELDS_DATA
+from classroom.services import default_json_serializer
 from classroom.models import *
 from users.helpers import parse_values_from_lists_when_ajax_resp, get_user_profile_data
 from django.db.models import Q
@@ -17,7 +19,7 @@ TEMPLATE_DAYS_DATA = json.load(
     open('template_days_data.json')
 )
 
-
+@login_required
 def send_booking_request(request):
 
     data = json.loads(request.POST['data'])
@@ -192,23 +194,109 @@ def leave_feedback(request):
     )
 
 
+def get_pivottable_data(queryset):
+
+    pivottable_data = []
+
+    for data_dict in queryset:
+        pivot_object = {}
+
+        for key, value in data_dict.items():
+            new_key = key.split("__")[-1]
+            pivot_object[new_key] = data_dict[key]
+
+            # Calculate agreed hours in the week
+            if new_key == "agreed_days":
+                pivot_object['Total Days'] = 0
+
+                for agreed_day in list(pivot_object[new_key].values()):
+                    pivot_object['Total Days'] += len(agreed_day)
+
+                pivot_object['Profit Wage'] = pivot_object['Total Days'] * 12.5
+
+                pivot_object['Profit After Tax'] = \
+                    pivot_object['Profit Wage'] - (pivot_object['Profit Wage'] * 5 / 100)
+
+        pivottable_data.append(pivot_object)
+
+    return pivottable_data
+
+
+@login_required
 def classroom(request):
-    rels = Relationship.objects.filter(
-            Q(sender=request.user) | Q(receiver=request.user),
-            is_confirmed=True
+    model_class = get_request_user_profile_model_and_fields(request.user)['model_class']
+
+    # TEACHERS AND STUDENTS SHOULD HAVE DIFFERENT VERS OF CLASSROOM
+    # MAYBE IT WOULD BE NICER TO USE THIS FUNCTION AS REDIRECT ONE
+    # WHICH CALL APPROPRIATE VIEW DEPENDING ON USER PROFILE MODEL
+    # BUT FOR NOW LEAVE IT AS IT IS
+
+    if model_class is TeacherProfile:
+        # setup
+        date_format_str = "%Y-%m-%d"
+
+        current_date = datetime.today().date()
+
+        # get from/to dates
+        try:
+            from_date = datetime.strptime(
+                request.GET.get("from_date", ""), date_format_str
+            )
+        except Exception:
+            from_date = current_date.replace(day=1)
+
+        try:
+            to_date = datetime.strptime(
+                request.GET.get("to_date", ""), date_format_str
+            )
+        except Exception:
+            to_date = current_date
+
+        # get data
+        # remove timedelta 30 in prod
+        rel_query = Relationship.objects.filter(receiver=request.user)
+
+        rel_query = rel_query.filter(
+            record_creation_datetime__date__range=[
+                datetime.combine(from_date, datetime.min.time()),
+                datetime.combine(to_date, datetime.max.time()),
+            ]
+        ).values("sender__username", "agreed_days",
+                 "record_creation_datetime__date", "is_confirmed")
+
+        data = get_pivottable_data(rel_query)
+
+        return render(
+            request,
+            "classroom/deposits_pivottable.html",
+            {
+                "json_data": json.dumps(data, default=default_json_serializer),
+                "from_date": from_date.strftime(date_format_str),
+                "to_date": to_date.strftime(date_format_str),
+            },
         )
 
-    cards_data = []
+    elif model_class is StudentProfile:
 
-    for rel in rels:
-        data = get_user_profile_data(
-                rel.receiver, TEACHER_CARD_FIELDS_DATA, as_dict=True
+        rels = Relationship.objects.filter(
+                Q(sender=request.user) | Q(receiver=request.user),
+                is_confirmed=True
             )
 
-        data["next_lesson"] = get_nearest_lesson(rel.agreed_days)
-        data["pk"] = rel.receiver_id
-        cards_data.append(data)
+        cards_data = []
 
-    cards_data = sorted(cards_data, key=lambda x: x['next_lesson'])
+        for rel in rels:
+            data = get_user_profile_data(
+                    rel.receiver, TEACHER_CARD_FIELDS_DATA, as_dict=True
+                )
 
-    return render(request, 'classroom/classroom.html', {'cards_data': cards_data})
+            data["next_lesson"] = get_nearest_lesson(rel.agreed_days)
+            data["pk"] = rel.receiver_id
+            cards_data.append(data)
+
+        cards_data = sorted(cards_data, key=lambda x: x['next_lesson'])
+
+        return render(request, 'classroom/classroom.html', {'cards_data': cards_data})
+
+    else:
+        return HttpResponse(status=404)
