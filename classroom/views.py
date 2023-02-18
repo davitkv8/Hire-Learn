@@ -166,7 +166,7 @@ def response_booking(request):
 
 @login_required
 def leave_feedback(request):
-    data = parse_values_from_lists_when_ajax_resp(request.POST)
+    data = parse_values_from_lists_when_ajax_resp(dict(request.POST))
     obj, created = Feedback.objects.get_or_create(
         receiver_id=data["receiver_id"],
         sender_id=data["sender_id"],

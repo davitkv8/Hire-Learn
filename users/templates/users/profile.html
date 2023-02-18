@@ -72,9 +72,15 @@
                             </button>
                       </li>
                     {% else %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                        <button id="book-btn" type="button" class="btn btn-danger" style="margin-left: 5px; width: 350px">BOOK</button>
-                    </li>
+                        {% if related %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <button id="feedback-btn" type="button" class="btn btn-info" style="margin-left: 5px; width: 350px" onclick="redirecter(this.id)">LEAVE FEEDBACK</button>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <button id="book-btn" type="button" class="btn btn-danger" style="margin-left: 5px; width: 350px" onclick="redirecter(this.id)">BOOK</button>
+                            </li>
+                        {% endif %}
                     {% endif %}
                     </ul>
                 </div>
@@ -134,9 +140,15 @@
 
 
 <script>
-document.getElementById("book-btn").onclick = function () {
-    location.href = "{% url "time_table" requested_user.id %}"
-};
+
+function redirecter(arg) {
+    if (arg.includes("book")) {
+        location.href = "{% url "time_table" requested_user.id %}"
+    }
+    else if (arg.includes("feedback")) {
+        location.href = "{% url "classroom" %}"
+    }
+}
 
 function func(arg){
     parentDiv = arg.parentNode

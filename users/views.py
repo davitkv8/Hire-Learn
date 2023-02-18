@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.db.models import Q
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
 
@@ -71,6 +72,12 @@ def user_profile_view(request, user_pk=None):
         context["feedbacks"] = Feedback.objects.filter(
             receiver=request.user
         )
+
+        # Check if users already have a relationship
+        context['related'] = Relationship.objects.filter(
+            Q(sender=request_user, receiver=requested_user) |
+            Q(sender=requested_user, receiver=request_user)
+        ).exists()
 
         return render(request, "users/profile.html", context=context)
 
