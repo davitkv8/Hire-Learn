@@ -196,11 +196,18 @@ def leave_feedback(request):
     )
 
 
-def get_pivottable_data(queryset):
+def get_pivottable_data(*args):
+
+    rel_query, feedback_query = args
+
+    feedback_data = {
+        dict_data['sender__username']: dict_data['rating']
+        for dict_data in feedback_query
+    }
 
     pivottable_data = []
 
-    for data_dict in queryset:
+    for data_dict in rel_query:
         pivot_object = {}
 
         for key, value in data_dict.items():
@@ -219,6 +226,10 @@ def get_pivottable_data(queryset):
                 pivot_object['Profit After Tax'] = \
                     pivot_object['Profit Wage'] - (pivot_object['Profit Wage'] * 5 / 100)
 
+        pivot_object['rating'] = feedback_data.get(
+            pivot_object['username']
+        )
+
         pivottable_data.append(pivot_object)
 
     return pivottable_data
@@ -234,47 +245,25 @@ def classroom(request):
     # BUT FOR NOW LEAVE IT AS IT IS
 
     if model_class is TeacherProfile:
-        # setup
-        date_format_str = "%Y-%m-%d"
 
-        current_date = datetime.today().date()
+        rel_query = Relationship.objects.filter(receiver=request.user)\
+            .values(
+            "sender__username", "agreed_days",
+            "record_creation_datetime__date", "is_confirmed",
+        )
 
-        # get from/to dates
-        try:
-            from_date = datetime.strptime(
-                request.GET.get("from_date", ""), date_format_str
-            )
-        except Exception:
-            from_date = current_date.replace(day=1)
+        feedbacks_query = Feedback.objects.filter(
+            sender__username__in=rel_query.values_list("sender__username", flat=True),
+            receiver=request.user
+        ).values("sender__username", "rating")
 
-        try:
-            to_date = datetime.strptime(
-                request.GET.get("to_date", ""), date_format_str
-            )
-        except Exception:
-            to_date = current_date
-
-        # get data
-        # remove timedelta 30 in prod
-        rel_query = Relationship.objects.filter(receiver=request.user)
-
-        rel_query = rel_query.filter(
-            record_creation_datetime__date__range=[
-                datetime.combine(from_date, datetime.min.time()),
-                datetime.combine(to_date, datetime.max.time()),
-            ]
-        ).values("sender__username", "agreed_days",
-                 "record_creation_datetime__date", "is_confirmed")
-
-        data = get_pivottable_data(rel_query)
+        data = get_pivottable_data(rel_query, feedbacks_query)
 
         return render(
             request,
             "classroom/deposits_pivottable.html",
             {
                 "json_data": json.dumps(data, default=default_json_serializer),
-                "from_date": from_date.strftime(date_format_str),
-                "to_date": to_date.strftime(date_format_str),
             },
         )
 
