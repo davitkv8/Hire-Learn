@@ -27,131 +27,111 @@
                 </div>
                 <div class="card-body contacts_body">
                     <ul class="contacts">
-                    {% if is_teacher %}
-                        {% for chatMember in chatMembers %}
-                        <li class="active">
-                            <div onclick="changeChat('{{ chatMember.sender }}', '{{ request.user }}')"
-                                 class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" alt="student"
-                                         class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>{{ chatMember.sender }}</span>
-                                    <p>{{ chatMember.sender }} is online</p>
-                                </div>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    {% else %}
-                    {% for chatMember in chatMembers %}
+                    {% for user in connected_users %}
                         <li class="active">
                             <div onclick="changeChat('{{ request.user }}', '{{ chatMember.receiver.user }}')"
                                  class="d-flex bd-highlight">
                                 <div class="img_cont">
-                                        <img src="{{ chatMember.receiver.image.url}}" alt="lecturer-image"
+                                        <img src="{% get_media_prefix %}{{ user.image }}" alt="lecturer-image"
                                              class="rounded-circle user_img">
                                     <span class="online_icon"></span>
                                 </div>
                                 <div class="user_info">
-                                    <span>{{ chatMember.receiver.user.teachersprofile.full_name }}</span>
-                                    <p>{{ chatMember.receiver.user.teachersprofile.subject }}'s lecturer</p>
+                                    <span>{{ user.username }}</span>
                                 </div>
                             </div>
                         </li>
                         {% endfor %}
-                    {% endif %}
                     </ul>
                 </div>
 
             </div>
         </div>
             <div class="col-md-8 col-xl-6 chat">
-                <div class="card">
-                    <div class="card-header msg_head">
-                    {% if chattingWith and totalMessages != None %}
-                        {% if is_teacher %}
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" alt="student"
-                                         class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                        <span>Chat with {{ chattingWith }}</span>
-                                        <p>{{ totalMessages }} Messages</p>
-                                </div>
-                            </div>
-                        {% else %}
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    <img src="{{ chattingWith.teachersprofile.image.url }}" alt="lecturer-image"
-                                         class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Chat with {{ chattingWith.teachersprofile.full_name }}</span>
-                                    <p>{{ totalMessages }} Messages</p>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                        <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
-                        <div class="action_menu">
-                            <ul>
-                                <li><i class="fas fa-user-circle"></i> View profile</li>
-                                <li><i class="fas fa-users"></i> Add to close friends</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card-body msg_card_body">
-                        {% for message in messages %}
-                            {% if request.user == message.sender %}
-                                <div class="d-flex justify-content-end mb-4">
-                                    <div class="msg_cotainer_send">
-                                        {{ message.message }}
-                                        <span class="msg_time_send">{{ message.format_time }}</span>
-                                    </div>
-                                </div>
-                            {% else %}
-                                <div class="d-flex justify-content-start mb-4">
-                                    <div class="msg_cotainer">
-                                        {{ message.message }}
-                                        <span class="msg_time">{{ message.format_time }}</span>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% if chattingWith != None %}
-                    <div class="card-footer">
-                        <div class="input-group">
-                            <div class="input-group-append">
-                                <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
-                            </div>
-                            <textarea name="" class="form-control type_msg" id="input" placeholder="Type your message..."></textarea>
-
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-success" id="submit">Send</button>
-
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                </div>
+{#                <div class="card">#}
+{#                    <div class="card-header msg_head">#}
+{#                    {% if chattingWith and totalMessages != None %}#}
+{#                        {% if is_teacher %}#}
+{#                            <div class="d-flex bd-highlight">#}
+{#                                <div class="img_cont">#}
+{#                                    <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" alt="student"#}
+{#                                         class="rounded-circle user_img">#}
+{#                                    <span class="online_icon"></span>#}
+{#                                </div>#}
+{#                                <div class="user_info">#}
+{#                                        <span>Chat with {{ chattingWith }}</span>#}
+{#                                        <p>{{ totalMessages }} Messages</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% else %}#}
+{#                            <div class="d-flex bd-highlight">#}
+{#                                <div class="img_cont">#}
+{#                                    <img src="{{ chattingWith.teachersprofile.image.url }}" alt="lecturer-image"#}
+{#                                         class="rounded-circle user_img">#}
+{#                                    <span class="online_icon"></span>#}
+{#                                </div>#}
+{#                                <div class="user_info">#}
+{#                                    <span>Chat with {{ chattingWith.teachersprofile.full_name }}</span>#}
+{#                                    <p>{{ totalMessages }} Messages</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                    {% endif %}#}
+{#                        <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>#}
+{#                        <div class="action_menu">#}
+{#                            <ul>#}
+{#                                <li><i class="fas fa-user-circle"></i> View profile</li>#}
+{#                                <li><i class="fas fa-users"></i> Add to close friends</li>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-body msg_card_body">#}
+{#                        {% for message in messages %}#}
+{#                            {% if request.user == message.sender %}#}
+{#                                <div class="d-flex justify-content-end mb-4">#}
+{#                                    <div class="msg_cotainer_send">#}
+{#                                        {{ message.message }}#}
+{#                                        <span class="msg_time_send">{{ message.format_time }}</span>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            {% else %}#}
+{#                                <div class="d-flex justify-content-start mb-4">#}
+{#                                    <div class="msg_cotainer">#}
+{#                                        {{ message.message }}#}
+{#                                        <span class="msg_time">{{ message.format_time }}</span>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{#                {% if chattingWith != None %}#}
+{#                    <div class="card-footer">#}
+{#                        <div class="input-group">#}
+{#                            <div class="input-group-append">#}
+{#                                <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>#}
+{#                            </div>#}
+{#                            <textarea name="" class="form-control type_msg" id="input" placeholder="Type your message..."></textarea>#}
+{##}
+{#                            <div class="input-group-append">#}
+{#                                <button type="button" class="btn btn-success" id="submit">Send</button>#}
+{##}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#                </div>#}
             </div>
 
         </div>
     </div>
 
-    {{ room_name|json_script:"room_name" }}
+{#    {{ room_name|json_script:"room_name" }}#}
     {{ request.user.username|json_script:"user_name" }}
     {{ is_seen|json_script:"is_seen" }}
 
     <script>
 
-        const roomName = JSON.parse(document.getElementById('room_name').textContent);
+        {#const roomName = JSON.parse(document.getElementById('room_name').textContent);#}
         const userName = JSON.parse(document.getElementById('user_name').textContent);
         const is_seen = JSON.parse(document.getElementById('is_seen').textContent);
         get_last_msg()

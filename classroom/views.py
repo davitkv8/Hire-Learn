@@ -261,7 +261,7 @@ def classroom(request):
 
         return render(
             request,
-            "classroom/deposits_pivottable.html",
+            "classroom/stats_pivottable.html",
             {
                 "json_data": json.dumps(data, default=default_json_serializer),
             },

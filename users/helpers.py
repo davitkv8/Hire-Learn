@@ -12,6 +12,8 @@ from users.namings import (
             M2M_FIELDS
         )
 
+from users.models import StudentProfile, TeacherProfile
+
 from datetime import datetime, date, time
 from copy import deepcopy
 import json
@@ -154,3 +156,25 @@ def get_user_profile_data(user: User, only_certain_fields=None, as_dict=False):
         return deepcopy(fields)
 
     return json.dumps(field_info_with_value)
+
+
+def get_user_based_query_str(user: User):
+    """
+        This function just gets user object and returns query str,
+        as user should be receiver or sender.
+
+        for example, if user is Teacher, she could be always receiver,
+        as he is never send booking request to anyone else
+    """
+
+    sender_receiver = ['sender', 'receiver']
+
+    model_class = get_request_user_profile_model_and_fields(user)['model_class']
+
+    if model_class is TeacherProfile:
+        sender_receiver.reverse()
+        return sender_receiver
+
+    elif model_class is StudentProfile:
+        return sender_receiver
+
