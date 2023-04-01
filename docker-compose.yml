@@ -5,10 +5,10 @@ services:
     container_name: hnl_app
     env_file:
       # - .env.mongo
-      - .env.postgres
+      - Dockerfiles/envs/.env.postgres
     build:
       context: .
-      dockerfile: Dockerfiles/
+      dockerfile: Dockerfiles/Dockerfile.app
     ports:
       - 8000:8000
     volumes:
@@ -21,11 +21,11 @@ services:
 
   postgres:
     restart: unless-stopped
-    container_name: 100mktg__postgres
+    container_name: hnl__postgres
     image: postgres:14.5
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - .env.postgres
+      - Dockerfiles/envs/.env.postgres
     networks:
       - app_network
