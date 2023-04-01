@@ -3,9 +3,9 @@ FROM python:3.10
 # needed for postgre lib
 RUN apt update && apt -y install libpq-dev gcc
 
-ADD requirements/requirements.app.txt .
+ADD Dockerfiles/requirements/requirements_app.txt .
 
-RUN pip install -r requirements.app.txt
+RUN pip install -r requirements_app.txt
 
 ADD . /app/
 

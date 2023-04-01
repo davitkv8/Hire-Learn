@@ -17,7 +17,7 @@ services:
       - postgres
     networks:
       - app_network
-    entrypoint: "./entrypoint.app.sh"
+    entrypoint: "Dockerfiles/entrypoint.app.sh"
 
   postgres:
     restart: unless-stopped
