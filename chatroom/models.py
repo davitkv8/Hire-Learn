@@ -14,5 +14,8 @@ class MessageRoom(models.Model):
     create_datetime = models.DateTimeField(default=timezone.now)
     seen_datetime = models.DateTimeField(null=True)
 
+    def format_time(self):
+        return self.create_datetime.strftime('%B %d, %H:%M')
+
     def __str__(self):
         return f'from {self.sender} to {self.receiver} on {self.create_datetime}'

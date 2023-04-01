@@ -73,7 +73,7 @@
                     </div>
                     <div class="card-body msg_card_body">
                         {% for message in details.messages %}
-                            {% if request.user == message.sender %}
+                            {% if request.user.username == message.sender__username %}
                                 <div class="d-flex justify-content-end mb-4">
                                     <div class="msg_cotainer_send">
                                         {{ message.message }}
@@ -125,7 +125,7 @@
         }
 
         const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/chat/' + `${request_username}&chat_member={{ details.chatting_with }}` + '/'
+            'ws://' + window.location.host + '/chat/' + `kutu` + '/'
         )
 
         document.querySelector("#submit").onclick = function () {
@@ -191,7 +191,7 @@
             msg_container.appendChild(time_span);
             send_msg_container.appendChild(msg_container);
 
-            if (data.username == userName){
+            if (data.username == request_username){
                 send_msg_container.setAttribute("class", "d-flex justify-content-start mb-4")
                 time_span.setAttribute('class', 'msg_time');
                 msg_container.setAttribute("class", "msg_cotainer")

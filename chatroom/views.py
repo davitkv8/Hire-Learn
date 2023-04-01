@@ -49,7 +49,7 @@ def chat_room(request):
         Q(
             sender__username=request.user.username,
             receiver__username=request_data['chat_member']
-        ) &
+        ) |
         Q(
             sender__username=request_data['chat_member'],
             receiver__username=request.user.username,
@@ -59,7 +59,7 @@ def chat_room(request):
     response_data['messages_count'] = total_messages.count()
 
     response_data['messages'] = total_messages.values(
-            'receiver__username', 'sender__username', 'create_datetime'
+            'receiver__username', 'sender__username', 'create_datetime', 'message'
     )[:70]
 
     response_data['user_image'] = chat_member_user_obj.basicabstractprofile.image.image.url
