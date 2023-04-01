@@ -3,5 +3,5 @@ from chatroom.views import *
 
 urlpatterns = [
     path('inbox/', inbox, name='chat_room_default_page'),
-    path('inbox/change_room/', chat_room, name='chat_room')
+    re_path(r'^inbox/chat_room/$', chat_room, name='chat_room')
 ]

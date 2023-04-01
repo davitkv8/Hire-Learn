@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                         </li>
-                        {% endfor %}
+                    {% endfor %}
                     </ul>
                 </div>
 
@@ -50,19 +50,19 @@
             <div class="col-md-8 col-xl-6 chat">
                 <div class="card">
                     <div class="card-header msg_head">
-                    {% if chattingWith and totalMessages != None %}
+
                         <div class="d-flex bd-highlight">
                             <div class="img_cont">
-                                <img src="{{ chattingWith.teachersprofile.image.url }}" alt="lecturer-image"
+                                <img src="{{ details.user_image }}" alt="lecturer-image"
                                      class="rounded-circle user_img">
                                 <span class="online_icon"></span>
                             </div>
                             <div class="user_info">
-                                <span>Chat with {{ chattingWith.teachersprofile.full_name }}</span>
-                                <p>{{ totalMessages }} Messages</p>
+                                <span>Chat with {{ details.chatting_with }}</span>
+                                <p>{{ details.messages_count }} Messages</p>
                             </div>
                         </div>
-                    {% endif %}
+
                         <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
                         <div class="action_menu">
                             <ul>
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="card-body msg_card_body">
-                        {% for message in messages %}
+                        {% for message in details.messages %}
                             {% if request.user == message.sender %}
                                 <div class="d-flex justify-content-end mb-4">
                                     <div class="msg_cotainer_send">
@@ -90,7 +90,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                {% if chattingWith != None %}
+                {% if details.chatting_with != None %}
                     <div class="card-footer">
                         <div class="input-group">
                             <div class="input-group-append">
@@ -121,22 +121,11 @@
         get_last_msg()
 
         function changeChat(request_user, chat_member){
-            $.ajax(
-                {
-                    url: "{% url 'chat_room_default_page' %}",
-                    type: 'POST',
-                    data: {csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                        request_user:request_user, chat_member:chat_member},
-
-                    success: function (response){
-                        window.location = 'http://127.0.0.1:8000/classroom/chat/'+response.url;
-                    }
-                }
-            )
+            location.href = `http://127.0.0.1:8000/chatroom/inbox/chat_room/?request_user=${request_user}&chat_member=${chat_member}`
         }
 
         const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/chat/' + roomName + '/'
+            'ws://' + window.location.host + '/chat/' + 'hera' + '/'
         )
 
         document.querySelector("#submit").onclick = function () {
