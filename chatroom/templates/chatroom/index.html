@@ -90,7 +90,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                {% if details.chatting_with != None %}
+
                     <div class="card-footer">
                         <div class="input-group">
                             <div class="input-group-append">
@@ -104,19 +104,19 @@
                             </div>
                         </div>
                     </div>
-                {% endif %}
+
                 </div>
             </div>
 
         </div>
     </div>
 
-    {{ request.user.username|json_script:"user_name" }}
+    {{ request.user.username|json_script:"request_username" }}
     {{ is_seen|json_script:"is_seen" }}
 
     <script>
 
-        const userName = JSON.parse(document.getElementById('user_name').textContent);
+        const request_username = JSON.parse(document.getElementById('request_username').textContent);
         const is_seen = JSON.parse(document.getElementById('is_seen').textContent);
         get_last_msg()
 
@@ -125,7 +125,7 @@
         }
 
         const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/chat/' + 'hera' + '/'
+            'ws://' + window.location.host + '/chat/' + `${request_username}&chat_member={{ details.chatting_with }}` + '/'
         )
 
         document.querySelector("#submit").onclick = function () {
@@ -134,8 +134,8 @@
                 chatSocket.send(
                     JSON.stringify({
                         'message': message.val(),
-                        'sender': userName,
-                        'receiver': '{{ chattingWith }}',
+                        'sender': request_username,
+                        'receiver': '{{ details.chatting_with }}',
                     })
                 )
                 message.val('');
@@ -181,6 +181,8 @@
         chatSocket.onmessage = function (e){
 
             const data = JSON.parse(e.data);
+            console.log(data);
+            console.log(request_username);
             let send_msg_container = document.createElement("div");
             let msg_container = document.createElement("div");
             let time_span = document.createElement("span");
