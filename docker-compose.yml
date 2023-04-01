@@ -29,3 +29,8 @@ services:
       - Dockerfiles/envs/.env.postgres
     networks:
       - app_network
+
+networks:
+  app_network:
+volumes:
+  postgres_data:
