@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from classroom.models import Relationship
-from chatroom.models import MessageRoom
+from chatroom.models import MessageRoom, CurrentlyActiveWSChannels
 from django.db.models import Q
 from django.http import JsonResponse
 from users.helpers import get_user_based_query_str, parse_values_from_lists_when_ajax_resp
@@ -63,6 +63,16 @@ def chat_room(request):
     )[:70]
 
     response_data['user_image'] = chat_member_user_obj.basicabstractprofile.image.image.url
+
+    try:
+        response_data['wss_url'] = CurrentlyActiveWSChannels.objects.get(
+            Q(group_name=f"chat__{request.user.username}__{response_data['chatting_with']}") |
+            Q(group_name=f"chat__{response_data['chatting_with']}__{request.user.username}")
+        ).group_name
+
+    except Exception as e:
+        print(e)
+        response_data['wss_url'] = f"chat__{request.user.username}__{response_data['chatting_with']}"
 
     connected_users = get_avail_chat_users(request)
 

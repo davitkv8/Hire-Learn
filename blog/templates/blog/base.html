@@ -79,7 +79,7 @@
    {% endblock scripts %}
     <script type="text/javascript">
         document.getElementById("notification-button").onclick = function () {
-            location.href = "chatroom/inbox/";
+            location.href = "{% url 'chat_room_default_page' %}";
         };
     </script>
 </html>

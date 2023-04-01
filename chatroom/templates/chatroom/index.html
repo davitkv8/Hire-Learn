@@ -49,6 +49,7 @@
         </div>
             <div class="col-md-8 col-xl-6 chat">
                 <div class="card">
+                {% if details %}
                     <div class="card-header msg_head">
 
                         <div class="d-flex bd-highlight">
@@ -104,18 +105,21 @@
                             </div>
                         </div>
                     </div>
-
+                {% endif %}
                 </div>
             </div>
 
         </div>
     </div>
 
+    {{ details.wss_url|json_script:"wss_url" }}
+    {{ details.chatting_with|json_script:"chatting_with" }}
     {{ request.user.username|json_script:"request_username" }}
     {{ is_seen|json_script:"is_seen" }}
 
     <script>
-
+        const wss_url = JSON.parse(document.getElementById('wss_url').textContent);
+        const chatting_with = JSON.parse(document.getElementById('chatting_with').textContent);
         const request_username = JSON.parse(document.getElementById('request_username').textContent);
         const is_seen = JSON.parse(document.getElementById('is_seen').textContent);
         get_last_msg()
@@ -125,7 +129,7 @@
         }
 
         const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/chat/' + `kutu` + '/'
+            'ws://' + window.location.host + '/chat/' + wss_url + '/'
         )
 
         document.querySelector("#submit").onclick = function () {

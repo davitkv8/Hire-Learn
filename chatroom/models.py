@@ -6,6 +6,13 @@ from cryptography.fernet import Fernet
 import base64
 
 
+class CurrentlyActiveWSChannels(models.Model):
+    group_name = models.TextField(unique=True)
+
+    class Meta:
+        verbose_name_plural = "Currently Active Channels"
+
+
 class MessageRoom(models.Model):
     message = models.CharField(max_length=255, null=False, blank=False)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_sender')
