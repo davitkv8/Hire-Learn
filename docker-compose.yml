@@ -1,0 +1,31 @@
+version: "3"
+services:
+  app:
+    restart: unless-stopped
+    container_name: hnl_app
+    env_file:
+      # - .env.mongo
+      - .env.postgres
+    build:
+      context: .
+      dockerfile: Dockerfiles/
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app/
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+    entrypoint: "./entrypoint.app.sh"
+
+  postgres:
+    restart: unless-stopped
+    container_name: 100mktg__postgres
+    image: postgres:14.5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env.postgres
+    networks:
+      - app_network
