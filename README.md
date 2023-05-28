@@ -1,25 +1,165 @@
-# Hire And Learn Django Project
+<!--
+Hey, thanks for using the awesome-readme-template template.  
+If you have any enhancements, then fork this project and create a pull request 
+or just open an issue with the label "enhancement".
 
-# How To Deploy
+Don't forget to give this project a star for additional support ;)
+Maybe you can mention me or this repo in the acknowledgements too
+-->
+<div align="center">
 
+  <img src="blog/static/blog/images/logo.png" alt="logo" width="200" height="auto" />
+  <h1>Awesome Readme Template</h1>
+  
+  <p>
+    Hire & Learn
+  </p>
+  
+  
+<!-- Badges -->
+<p>
+  <a href="https://github.com/davitkv8/Hire-Learn/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/davitkv8/Hire-Learn" alt="contributors" />
+  </a>
+  <a href="">
+    <img src="https://img.shields.io/github/last-commit/davitkv8/Hire-Learn" alt="last update" />
+  </a>
+  <a href="https://github.com/davitkv8/Hire-Learn/network/members">
+    <img src="https://img.shields.io/github/forks/davitkv8/Hire-Learn" alt="forks" />
+  </a>
+  <a href="https://github.com/davitkv8/Hire-Learn/stargazers">
+    <img src="https://img.shields.io/github/stars/davitkv8/Hire-Learn" alt="stars" />
+  </a>
+  <a href="https://github.com/davitkv8/Hire-Learn/issues/">
+    <img src="https://img.shields.io/github/issues/davitkv8/Hire-Learn" alt="open issues" />
+  </a>
+</p>
+   
+<h4>
+    <a href="https://hirelearn.edu.space">View Demo</a>
+  <span> · </span>
+    <a href="https://github.com/davitkv8/Hire-Learn/issues/">Report Bug</a>
+  <span> · </span>
+    <a href="https://github.com/davitkv8/Hire-Learn/issues/">Request Feature</a>
+  </h4>
+</div>
+
+<br />
+
+<!-- Table of Contents -->
+# :notebook_with_decorative_cover: Table of Contents
+
+- [About the Project](#star2-about-the-project)
+  * [Screenshots](#camera-screenshots)
+  * [Tech Stack](#space_invader-tech-stack)
+  * [Features](#dart-features)
+  * [Environment Variables](#key-environment-variables)
+- [Getting Started](#toolbox-getting-started)
+  * [Prerequisites](#bangbang-prerequisites)
+  * [Run Locally](#running-run-locally)
+  * [Deployment](#triangular_flag_on_post-deployment)
+- [Roadmap](#compass-roadmap)
+
+  
+
+<!-- About the Project -->
+## :star2: About the Project
+
+
+<!-- Screenshots -->
+### :camera: Screenshots
+
+<div align="center"> 
+  <img src="https://placehold.co/600x400?text=Your+Screenshot+here" alt="screenshot" />
+</div>
+
+
+<!-- TechStack -->
+### :space_invader: Tech Stack
+
+<details>
+<summary>Database</summary>
+  <ul>
+    <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+    <li><a href="https://redis.io/">Redis</a></li>
+    <li><a href="https://www.mongodb.com/">MongoDB</a></li>
+  </ul>
+</details>
+
+<details>
+<summary>DevOps</summary>
+  <ul>
+    <li><a href="https://www.docker.com/">Docker</a></li>
+  </ul>
+</details>
+
+<!-- Features -->
+### :dart: Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+
+<!-- Env Variables -->
+### :key: Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`API_KEY`
+
+`ANOTHER_API_KEY`
+
+<!-- Getting Started -->
+## 	:toolbox: Getting Started
+
+<!-- Prerequisites -->
+### :bangbang: Prerequisites
+
+The project is dockerized and start process is fully automated.
+Install docker and docker-compose first
+
+<ul>
+<li>
+<a 
+href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-22-04">How To Install Docker on Ubuntu Machine
+</a>
+</li>
+</ul>
+
+
+<!-- Run Locally -->
+### :running: Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/davitkv8/Hire-Learn.git --config core.autocrlf=false
 ```
-    If you are Windows user, clone this project using following command -
-    git clone https://github.com/someuser/somerepo --config core.autocrlf=false
-    Or try another ways to turn off autocrlf
+
+Go to the project directory
+
+```bash
+  cd Hire-Learn
 ```
 
-0. clone this repository
-1. install docker & docker-compose
-2. cd to folder where manage.py is living
-3. run
+Run docker-compose (Usually, it will take around 3 minutes for your first run)
 
+```bash
+  docker-compose up --build
 ```
-    docker-compose up --build
-    It will take no more than 20 seconds.
-```
-4. Visit - http://localhost:8000
 
-# Project Ideas
+Visit - http://localhost:8000
+
+
+<!-- Deployment -->
+### :triangular_flag_on_post: Deployment
+
+at the time, the project is available on development mode only
+
+
+<!-- Roadmap -->
+## :compass: Roadmap
 
 - Add Rabbit as messaging broker to send E-mail for newly registered users.
 - Restore JWT2 Authentication with Google
@@ -32,5 +172,20 @@
 - Integrate ASG Interface in the whole project, to be notified anywhere if someone messages you.
 - Deploy project on Linode.
 
-# Important
-- Fix ASGI
+
+
+<!-- Contributing -->
+## :wave: Contributing
+
+<a href="https://github.com/davitkv8/Hire-Learn/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=davitkv8/Hire-Learn" />
+</a>
+
+
+Contributions are always welcome!
+
+<!-- Contact -->
+## :handshake: Contact
+
+Davit Kvaratskhelia - [@Linkedin](https://www.linkedin.com/in/davit-kvaratskhelia/) - davit.kv8@gmail.com
+
