@@ -52,7 +52,6 @@ Maybe you can mention me or this repo in the acknowledgements too
 - [About the Project](#star2-about-the-project)
   * [Screenshots](#camera-screenshots)
   * [Tech Stack](#space_invader-tech-stack)
-  * [Features](#dart-features)
   * [Environment Variables](#key-environment-variables)
 - [Getting Started](#toolbox-getting-started)
   * [Prerequisites](#bangbang-prerequisites)
@@ -70,7 +69,9 @@ Maybe you can mention me or this repo in the acknowledgements too
 ### :camera: Screenshots
 
 <div align="center"> 
-  <img src="https://placehold.co/600x400?text=Your+Screenshot+here" alt="screenshot" />
+  <img src="general_assets/main_page.png" alt="main_page" />
+  <img src="general_assets/signup.png" alt="signup" />
+  <img src="general_assets/asgi_chatroom.png" alt="asgi_chatroom" />
 </div>
 
 
@@ -93,22 +94,12 @@ Maybe you can mention me or this repo in the acknowledgements too
   </ul>
 </details>
 
-<!-- Features -->
-### :dart: Features
-
-- Feature 1
-- Feature 2
-- Feature 3
-
 
 <!-- Env Variables -->
 ### :key: Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
-
-`API_KEY`
-
-`ANOTHER_API_KEY`
+To run this project, you will need to add the following environment variables to your Dockerfiles/envs/.env* file
+Also, do not forget to provide your own E-mail credentials for Oauth2 integration functionalities
 
 <!-- Getting Started -->
 ## 	:toolbox: Getting Started
