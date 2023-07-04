@@ -162,6 +162,7 @@ at the time, the project is available on development mode only
 <!-- ASAP -->
 ## :compass: ASAP
 - Integrate Payments initial demo
+- Add Blog app, which syncs (background process, microservice) data from Georgian market (latest tech newses, jobs..)
 - Run checkers in background as microservices
 - Celery, Redis, RabbitMQ
 - Terraform
