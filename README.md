@@ -53,6 +53,7 @@ Maybe you can mention me or this repo in the acknowledgements too
   * [Run Locally](#running-run-locally)
   * [Deployment](#triangular_flag_on_post-deployment)
 - [Roadmap](#compass-roadmap)
+- - [ASAP](#compass-asap)
 
   
 
@@ -158,7 +159,14 @@ at the time, the project is available on development mode only
 - Integrate ASG Interface in the whole project, to be notified anywhere if someone messages you.
 - Deploy project on Linode.
 
-
+<!-- ASAP -->
+## :compass: ASAP
+- Integrate Payments initial demo
+- Run checkers in background as microservices
+- Celery, Redis, RabbitMQ
+- Terraform
+- Kubernetes
+- AWS
 
 <!-- Contributing -->
 ## :wave: Contributing
