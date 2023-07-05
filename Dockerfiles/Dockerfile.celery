@@ -3,9 +3,9 @@ ENV PYTHONUNBUFFERED=1
 
 RUN apt update && apt -y install libpq-dev gcc
 
-ADD Docker/requirements/requirements.celery.txt .
+ADD Dockerfiles/requirements/requirements_celery.txt .
 
-RUN pip install -r requirements.celery.txt
+RUN pip install -r requirements_celery.txt
 
 ADD . /app/
 

@@ -22,7 +22,8 @@ from users.models import UserStatus, TeacherProfile, Image, StudentProfile, Hash
 from .helpers import parse_values_from_lists_when_ajax_resp,\
     validate_image, create_foreign_keys_where_necessary,\
     get_request_user_profile_model_and_fields,\
-    get_user_profile_data
+    get_user_profile_data,\
+    email_verification
 
 from classroom.services import get_booking_requests
 from classroom.models import *
@@ -231,7 +232,7 @@ def complete_user_registration(request, pk):  # User's Primary key
         data = create_foreign_keys_where_necessary(form.Meta.model, data)
 
         form.Meta.model.objects.create(**data)
-
+        email_verification(request, pk)
         url = reverse('hashTag')
 
         return JsonResponse(status=302, data={'success': url})

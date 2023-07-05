@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'chatroom.apps.ChatroomConfig',
     'widget_tweaks',
+    'django_celery_beat',
 ]
 
 ASGI_APPLICATION = "HNL.asgi.application"

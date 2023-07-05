@@ -70,7 +70,7 @@ services:
     container_name: hnl__celery_worker
     build:
       context: .
-      dockerfile: Docker/Dockerfile.celery
+      dockerfile: Dockerfiles/Dockerfile.celery
     depends_on:
       - app
       - redis
@@ -80,13 +80,13 @@ services:
     networks:
       - app_network
     entrypoint:
-      "Docker/entrypoint.celery.sh"
+      "Dockerfiles/entrypoint.celery.sh"
 
   beat:
     container_name: hnl__celery_beat
     build:
       context: .
-      dockerfile: Docker/Dockerfile.celery
+      dockerfile: Dockerfiles/Dockerfile.celery
     depends_on:
       - app
       - redis
@@ -96,7 +96,7 @@ services:
     networks:
       - app_network
     entrypoint:
-      "Docker/entrypoint.beat.sh"
+      "Dockerfiles/entrypoint.beat.sh"
 
 networks:
   app_network:
