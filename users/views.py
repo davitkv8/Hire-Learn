@@ -106,7 +106,7 @@ def user_profile_view(request, user_pk=None):
                 Q(sender=requested_user, receiver=request_user)
             ).exists()
 
-            set_key(requested_user.username, context)
+            # set_key(requested_user.username, context)
 
         return render(request, "users/profile.html", context=context)
 
