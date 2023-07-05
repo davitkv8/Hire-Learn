@@ -3,7 +3,7 @@ import pytest
 from .string_data_manipulators import *
 
 
-@pytest.mark.medium
+@pytest.mark.string_manipulators
 @pytest.mark.parametrize("data_dict, date_today, result", [
     (
             {'sunday': ['3:00-4:00'], 'tuesday': ['3:00-4:00']},
