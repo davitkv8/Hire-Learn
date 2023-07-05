@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', Login.as_view(), name='login'),
     path('register/', register, name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('verify-user/<uidb64>/<token>/', VerificationView.as_view(), name='verification-view'),
 
     path('complete/profile/<int:pk>/', complete_user_registration, name='complete-user'),
     path('hashTag/', hash_tags, name='hashTag'),

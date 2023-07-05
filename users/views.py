@@ -1,12 +1,15 @@
 import json
 
+from django.views.generic import View
 from django.shortcuts import render, redirect, HttpResponse, Http404
 from django.urls import reverse
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_decode
 from django.http import JsonResponse
+from django.utils.encoding import force_str
 from django.db.models import Q
 
 from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
@@ -27,6 +30,21 @@ from .helpers import parse_values_from_lists_when_ajax_resp,\
 
 from classroom.services import get_booking_requests
 from classroom.models import *
+
+
+class VerificationView(View):
+    def get(self, request, uidb64, token):
+
+        user_id = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=user_id)
+
+        user_profile_obj = get_request_user_profile_model_and_fields(user)['profile_obj']
+
+        user_profile_obj.is_verified_by_email = True
+        user_profile_obj.save()
+
+        return redirect('userProfile', user.pk)
+
 
 @login_required
 def get_names(request):

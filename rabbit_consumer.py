@@ -1,10 +1,12 @@
 import smtplib
 import ssl
 import os
-import django
 import pika
 import json
+import time
 from email.message import EmailMessage
+
+time.sleep(10)
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
 params = pika.ConnectionParameters("rabbitmq")
@@ -15,18 +17,16 @@ channel = connection.channel()
 # Declaring channels
 channel.queue_declare(queue="message_alert")
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "demo.settings")
-django.setup()
-
 
 def send_notification_to_emails(data):
 
     data = json.loads(data)
+    print(data)
 
     # Define email sender and receiver
     email_sender = os.environ.get("EMAIL_HOST_USER")
     email_password = os.environ.get("EMAIL_HOST_PASSWORD")
-    email_receiver = data['email_receiver']
+    email_receiver = data['address']
 
     em = EmailMessage()
     em['From'] = email_sender
@@ -39,6 +39,7 @@ def send_notification_to_emails(data):
 
     # Log in and send the email
     with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        print(email_sender, email_password)
         smtp.login(email_sender, email_password)
         smtp.sendmail(email_sender, email_receiver, em.as_string())
 

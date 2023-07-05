@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 
 # Verification imports
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
+from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .token_util import token_generator
 
@@ -51,7 +51,7 @@ def email_verification(request, pk):
     data = {
         "subject": email_subject,
         "body": email_body,
-        "sender": user.email
+        "address": user.email
     }
 
     data = json.dumps(data)

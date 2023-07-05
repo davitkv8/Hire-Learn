@@ -74,7 +74,7 @@ class BasicAbstractProfile(models.Model):
     hashTag = models.ManyToManyField(HashTag)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True)
     timeGraph = models.OneToOneField(TimeGraph, on_delete=models.SET_NULL, null=True)
-    is_active = models.BooleanField(default=False)
+    is_verified_by_email = models.BooleanField(default=False)
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
     record_creation_datetime = models.DateTimeField(editable=True, auto_now=True)
 

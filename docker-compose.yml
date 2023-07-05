@@ -54,6 +54,22 @@ services:
     networks:
       - app_network
 
+  queue:
+    container_name: hnl__queue
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile.queue
+    depends_on:
+      - rabbitmq
+    networks:
+      - app_network
+    env_file:
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
+    environment:
+      RABBITMQ_HOST: "rabbitmq"
+    entrypoint: "Dockerfiles/entrypoint.queue.sh"
+
   rabbitmq:
     container_name: "hnl__rabbitmq"
     image: rabbitmq:3-management
