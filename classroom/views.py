@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.helpers import get_request_user_profile_model_and_fields, create_foreign_keys_where_necessary
 from users.models import TeacherProfile, StudentProfile
-from classroom.services import create_booking_request, get_booking_requests, get_nearest_lesson
+from classroom.services import create_booking_request, get_booking_requests
 from classroom.namings import TEACHER_CARD_FIELDS_DATA
 from classroom.services import default_json_serializer
 from classroom.models import *
