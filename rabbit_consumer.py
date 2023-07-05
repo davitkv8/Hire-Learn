@@ -3,6 +3,7 @@ import ssl
 import os
 import django
 import pika
+import json
 from email.message import EmailMessage
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
@@ -18,24 +19,20 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "demo.settings")
 django.setup()
 
 
-def send_notification_to_emails(email_receiver):
+def send_notification_to_emails(data):
+
+    data = json.loads(data)
 
     # Define email sender and receiver
     email_sender = os.environ.get("EMAIL_HOST_USER")
     email_password = os.environ.get("EMAIL_HOST_PASSWORD")
-    email_receiver = 'hnl.test.bot@gmail.com'
-
-    # Set the subject and body of the email
-    subject = 'HNL Verification Email'
-    body = """
-    I've just published a new video on YouTube: https://youtu.be/2cZzP9DLlkg
-    """
+    email_receiver = data['email_receiver']
 
     em = EmailMessage()
     em['From'] = email_sender
     em['To'] = email_receiver
-    em['Subject'] = subject
-    em.set_content(body)
+    em['Subject'] = data['subject']
+    em.set_content(data['body'])
 
     # Add SSL (layer of security)
     context = ssl.create_default_context()

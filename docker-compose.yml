@@ -66,6 +66,38 @@ services:
     volumes:
       - rabbitmq_data:/etc/rabbitmq/conf.d/
 
+  celery:
+    container_name: hnl__celery_worker
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile.celery
+    depends_on:
+      - app
+      - redis
+    env_file:
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
+    networks:
+      - app_network
+    entrypoint:
+      "Docker/entrypoint.celery.sh"
+
+  beat:
+    container_name: hnl__celery_beat
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile.celery
+    depends_on:
+      - app
+      - redis
+    env_file:
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
+    networks:
+      - app_network
+    entrypoint:
+      "Docker/entrypoint.beat.sh"
+
 networks:
   app_network:
 volumes:

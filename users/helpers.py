@@ -2,8 +2,17 @@
     THOSE FUNCTIONS ARE ADDED AS HELPER FUNCTIONS FOR CERTAIN CASES
 """
 import imghdr
+import json
+
+from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
+
+# Verification imports
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from .token_util import token_generator
 
 from users.namings import (
             VISIBLE_FIELDS_IN_STUDENTS_PROFILE_PAGE,
@@ -12,15 +21,42 @@ from users.namings import (
             M2M_FIELDS
         )
 
+from users.producer import publish
+
 from users.models import StudentProfile, TeacherProfile
 
 from datetime import datetime, date, time
 from copy import deepcopy
-import json
 
 FIELDS_TO_BE_IGNORED = [
     'user_status',
 ]
+
+
+def email_verification(request, pk):
+    user = User.objects.filter(pk=pk).first()
+    domain = get_current_site(request).domain
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+    link = reverse(
+        'verification-view', kwargs={
+            'uidb64': uidb64, 'token': token_generator.make_token(user)
+        }
+    )
+
+    activate_url = 'http://' + domain + link
+    email_subject = 'Account Verification'
+    email_body = f"Hello {user.username} Please use this link to verify your account {activate_url}"
+
+    data = {
+        "subject": email_subject,
+        "body": email_body,
+        "sender": user.email
+    }
+
+    data = json.dumps(data)
+
+    publish("message_alert", data)
 
 
 def get_request_user_profile_model_and_fields(user):
