@@ -6,6 +6,7 @@ services:
     env_file:
       # - .env.mongo
       - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
     environment:
       - REDIS_PORT=6379
       - REDIS_HOST=redis
