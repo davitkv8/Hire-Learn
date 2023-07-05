@@ -1,6 +1,6 @@
 import pytest
 
-from string_data_manipulators import *
+from .string_data_manipulators import *
 
 
 @pytest.mark.medium
