@@ -64,7 +64,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install wheel bump2version
-          pip install -r requirements.txt
           bump2version patch
 
       - name: Build and Publish
