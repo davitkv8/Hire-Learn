@@ -8,6 +8,6 @@ setup(
     author_email="davit.kv8@gmail.com",
     description="Working with string data",
     long_description="The package contains tens of different algorithms to work with string data",
-    packages=['our_public_packages.string_data_algorithms'],
+    packages=['string_data_algorithms'],
     install_requires=[],
 )

@@ -11,6 +11,8 @@ from classroom.models import *
 from users.helpers import parse_values_from_lists_when_ajax_resp, get_user_profile_data
 from django.db.models import Q
 
+from string_data_algorithms.string_data_manipulators import get_nearest_lesson
+
 import copy
 import json
 
