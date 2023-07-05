@@ -2,10 +2,16 @@ version: "3"
 services:
   app:
     restart: unless-stopped
-    container_name: hnl_app
+    container_name: hnl__app
     env_file:
       # - .env.mongo
       - Dockerfiles/envs/.env.postgres
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - SENTRY_DSN=https://e879ae852a0b4577bb99a9b46ef4f20e@o1152189.ingest.sentry.io/6230064
+      - CACHE_HOST_AND_PORT=memcached:11211
+      - RABBITMQ_HOST=rabbitmq
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.app
@@ -15,6 +21,9 @@ services:
       - .:/app/
     depends_on:
       - postgres
+      - redis
+      - memcached
+      - rabbitmq
     networks:
       - app_network
     entrypoint: "Dockerfiles/entrypoint.app.sh"
@@ -30,7 +39,34 @@ services:
     networks:
       - app_network
 
+  memcached:
+    restart: unless-stopped
+    container_name: hnl__memcached
+    image: memcached
+    networks:
+      - app_network
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    container_name: hnl__redis
+    networks:
+      - app_network
+
+  rabbitmq:
+    container_name: "hnl__rabbitmq"
+    image: rabbitmq:3-management
+    networks:
+      - app_network
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/etc/rabbitmq/conf.d/
+
 networks:
   app_network:
 volumes:
   postgres_data:
+  rabbitmq_data:

@@ -14,6 +14,9 @@ from .forms import TeacherRegisterForm, TeacherProfileForm, StudentProfileForm
 from .namings import STUDENT_PROFILE_FIELD_IDS_IN_FRONT,\
     TEACHER_FIELD_IDS_IN_FRONT, M2M_FIELDS, FOREIGN_KEY_FIELDS
 
+from .services import get_user_profile_from_cache
+from .memcache_helpers import set_key
+
 from users.models import UserStatus, TeacherProfile, Image, StudentProfile, HashTag
 
 from .helpers import parse_values_from_lists_when_ajax_resp,\
@@ -62,22 +65,29 @@ def user_profile_view(request, user_pk=None):
     request_user = request.user  # Just request user.
 
     if request.method == "GET":
-        context['fields_data'] = get_user_profile_data(requested_user)
-        context['requested_user'] = requested_user
 
-        context['bookingRequests'] = get_booking_requests(
-            **{"receiver_id": requested_user.id, "is_confirmed": False}
-        )
+        context = get_user_profile_from_cache(requested_user.username) or {}
 
-        context["feedbacks"] = Feedback.objects.filter(
-            receiver=request.user
-        )
+        if not context:
 
-        # Check if users already have a relationship
-        context['related'] = Relationship.objects.filter(
-            Q(sender=request_user, receiver=requested_user) |
-            Q(sender=requested_user, receiver=request_user)
-        ).exists()
+            context['fields_data'] = get_user_profile_data(requested_user)
+            context['requested_user'] = requested_user
+
+            context['bookingRequests'] = get_booking_requests(
+                **{"receiver_id": requested_user.id, "is_confirmed": False}
+            )
+
+            context["feedbacks"] = Feedback.objects.filter(
+                receiver=request.user
+            )
+
+            # Check if users already have a relationship
+            context['related'] = Relationship.objects.filter(
+                Q(sender=request_user, receiver=requested_user) |
+                Q(sender=requested_user, receiver=request_user)
+            ).exists()
+
+            set_key(requested_user.username, context)
 
         return render(request, "users/profile.html", context=context)
 
