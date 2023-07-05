@@ -13,4 +13,4 @@ from .string_data_manipulators import *
     ),
 ])
 def test_get_nearest_lesson(data_dict: dict, date_today: datetime, result: datetime):
-    assert get_nearest_lesson(data_dict, date_today) == result
+    assert get_nearest_lesson(data_dict, datetime_today=date_today) == result
