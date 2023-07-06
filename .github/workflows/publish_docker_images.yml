@@ -1,0 +1,35 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Login to GitHub Container Registry
+      run: docker login --username davitkv8 --password ${{ secrets.REGISTRY_PASSWORD }} ghcr.io
+
+    - name: Build and push Docker images
+      run: |
+        docker-compose build
+        docker-compose up -d
+        
+        
+        docker tag hnl__app ghcr.io/davitkv8/app:${{ github.sha }}
+        docker push ghcr.io/davitkv8/app:${{ github.sha }}
+
+        docker tag hnl__queue ghcr.io/davitkv8/queue:${{ github.sha }}
+        docker push ghcr.io/davitkv8/queue:${{ github.sha }}
+        
+        docker tag hnl__beat ghcr.io/beat:${{ github.sha }}
+        docker push ghcr.io/davitkv8/beat:${{ github.sha }}
+        
+        docker tag hnl__postgres ghcr.io/davitkv8/postgres:${{ github.sha }}
+        docker push ghcr.io/davitkv8/postgres:${{ github.sha }}
+        
+        docker tag hnl__redis ghcr.io/davitkv8/redis:${{ github.sha }}
+        docker push ghcr.io/davitkv8/redis:${{ github.sha }}

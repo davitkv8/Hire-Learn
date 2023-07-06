@@ -21,6 +21,7 @@ TEMPLATE_DAYS_DATA = json.load(
     open('template_days_data.json')
 )
 
+
 @login_required
 def send_booking_request(request):
 
