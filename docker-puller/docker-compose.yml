@@ -22,7 +22,7 @@ services:
       - rabbitmq
     networks:
       - app_network
-    entrypoint: "Dockerfiles/entrypoint.app.sh"
+    entrypoint: "./entrypoint.app.sh"
 
   postgres:
     restart: unless-stopped
@@ -31,7 +31,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - Dockerfiles/envs/.env.postgres
+      - envs/.env.postgres
     networks:
       - app_network
 
@@ -57,12 +57,12 @@ services:
     networks:
       - app_network
     env_file:
-      - Dockerfiles/envs/.env.postgres
-      - Dockerfiles/envs/.env.mail
+      - envs/.env.postgres
+      - envs/.env.mail
     environment:
       RABBITMQ_HOST: "rabbitmq"
     entrypoint:
-      "Dockerfiles/entrypoint.queue.sh"
+      "entrypoint.queue.sh"
 
   rabbitmq:
     container_name: "hnl__rabbitmq"
@@ -83,12 +83,12 @@ services:
       - app
       - redis
     env_file:
-      - Dockerfiles/envs/.env.postgres
-      - Dockerfiles/envs/.env.mail
+      - envs/.env.postgres
+      - envs/.env.mail
     networks:
       - app_network
     entrypoint:
-      "Dockerfiles/entrypoint.celery.sh"
+      "entrypoint.celery.sh"
 
   beat:
     container_name: hnl__celery_beat
@@ -97,12 +97,12 @@ services:
       - app
       - redis
     env_file:
-      - Dockerfiles/envs/.env.postgres
-      - Dockerfiles/envs/.env.mail
+      - envs/.env.postgres
+      - envs/.env.mail
     networks:
       - app_network
     entrypoint:
-      "Dockerfiles/entrypoint.beat.sh"
+      "./entrypoint.beat.sh"
 
 networks:
   app_network:
