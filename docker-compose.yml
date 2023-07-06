@@ -3,6 +3,10 @@ services:
   app:
     restart: unless-stopped
     container_name: hnl__app
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile.app
+    image: hire-learn_app
     env_file:
       # - .env.mongo
       - Dockerfiles/envs/.env.postgres
@@ -55,6 +59,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.queue
+    image: hire-learn_queue
     depends_on:
       - rabbitmq
     networks:
@@ -82,6 +87,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.celery
+    image: hire-learn_celery
     depends_on:
       - app
       - redis
@@ -96,6 +102,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.beat
+    image: hire-learn_beat
     depends_on:
       - app
       - redis
