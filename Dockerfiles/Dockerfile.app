@@ -18,5 +18,7 @@ EXPOSE 8000
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN pwd
+RUN ls -ltr
 
 RUN chmod +x Dockerfiles/entrypoint.app.sh
