@@ -92,6 +92,13 @@ resource "aws_security_group" "traffic_sg" {
   }
 
   ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -150,14 +157,22 @@ resource "aws_instance" "prod" {
       Environment = "prod"
     }
 
+    provisioner "file" {
+    source      = "/docker-puller"  # Replace with the path to your local file
+    destination = "/"  # Replace with the desired destination path on the instance
+  }
+
     user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y
-              sudo amazon-linux-extras install docker -y
-              sudo service docker start
+              sudo yum install docker -y
+              sudo yum install docker -y
               sudo usermod -a -G docker ec2-user
-              curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-              chmod +x /usr/local/bin/docker-compose
+              sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+              sudo yum install nginx
+              sudo systemctl start nginx
+              sudo systemctl enable nginx
               EOF
 
 }
