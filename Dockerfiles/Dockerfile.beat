@@ -11,6 +11,4 @@ ADD . /app/
 
 WORKDIR /app/
 
-COPY entrypoint.beat.sh /entrypoint.beat.sh
-RUN chmod +x /entrypoint.beat.sh
-RUN /entrypoint.beat.sh
+RUN chmod +x Dockerfiles/entrypoint.beat.sh

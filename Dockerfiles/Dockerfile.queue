@@ -12,6 +12,5 @@ ADD . /app/
 
 WORKDIR /app/
 
-COPY entrypoint.queue.sh /entrypoint.queue.sh
-RUN chmod +x /entrypoint.queue.sh
-RUN /entrypoint.queue.sh
+
+RUN chmod +x Dockerfiles/entrypoint.queue.sh

@@ -3,6 +3,7 @@ services:
   app:
     restart: unless-stopped
     container_name: hnl__app
+    image: hire-learn_app
     env_file:
       # - .env.mongo
       - Dockerfiles/envs/.env.postgres
@@ -13,9 +14,6 @@ services:
       - SENTRY_DSN=https://e879ae852a0b4577bb99a9b46ef4f20e@o1152189.ingest.sentry.io/6230064
       - CACHE_HOST_AND_PORT=memcached:11211
       - RABBITMQ_HOST=rabbitmq
-    build:
-      context: .
-      dockerfile: Dockerfiles/Dockerfile.app
     ports:
       - 8000:8000
     volumes:
@@ -55,6 +53,7 @@ services:
 
   queue:
     container_name: hnl__queue
+    image: hire-learn_queue
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.queue
@@ -82,6 +81,7 @@ services:
 
   celery:
     container_name: hnl__celery_worker
+    image: hire-learn_celery
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.celery
@@ -96,6 +96,7 @@ services:
 
   beat:
     container_name: hnl__celery_beat
+    image: hire-learn_beat
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.beat

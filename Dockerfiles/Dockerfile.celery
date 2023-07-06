@@ -11,6 +11,4 @@ ADD . /app/
 
 WORKDIR /app/
 
-COPY entrypoint.celery.sh /entrypoint.celery.sh
-RUN chmod +x /entrypoint.celery.sh
-RUN /entrypoint.celery.sh
+RUN chmod +x Dockerfiles/entrypoint.celery.sh
