@@ -3,7 +3,6 @@ services:
   app:
     restart: unless-stopped
     container_name: hnl__app
-    image: hire-learn_app
     env_file:
       # - .env.mongo
       - Dockerfiles/envs/.env.postgres
@@ -53,7 +52,6 @@ services:
 
   queue:
     container_name: hnl__queue
-    image: hire-learn_queue
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.queue
@@ -81,7 +79,6 @@ services:
 
   celery:
     container_name: hnl__celery_worker
-    image: hire-learn_celery
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.celery
@@ -96,7 +93,6 @@ services:
 
   beat:
     container_name: hnl__celery_beat
-    image: hire-learn_beat
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile.beat
