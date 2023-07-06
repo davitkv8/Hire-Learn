@@ -17,3 +17,7 @@ EXPOSE 8000
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+
+COPY entrypoint.app.sh /entrypoint.app.sh
+RUN chmod +x /entrypoint.app.sh
+RUN /entrypoint.app.sh

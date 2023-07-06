@@ -11,6 +11,6 @@ ADD . /app/
 
 WORKDIR /app/
 
-COPY entrypoint.celery.sh /entrypoint.celery.sh
-RUN chmod +x /entrypoint.celery.sh
-RUN /entrypoint.celery.sh
+COPY entrypoint.beat.sh /entrypoint.beat.sh
+RUN chmod +x /entrypoint.beat.sh
+RUN /entrypoint.beat.sh

@@ -27,7 +27,6 @@ services:
       - rabbitmq
     networks:
       - app_network
-    entrypoint: "Dockerfiles/entrypoint.app.sh"
 
   postgres:
     restart: unless-stopped
@@ -68,7 +67,6 @@ services:
       - Dockerfiles/envs/.env.mail
     environment:
       RABBITMQ_HOST: "rabbitmq"
-    entrypoint: "Dockerfiles/entrypoint.queue.sh"
 
   rabbitmq:
     container_name: "hnl__rabbitmq"
@@ -95,14 +93,12 @@ services:
       - Dockerfiles/envs/.env.mail
     networks:
       - app_network
-    entrypoint:
-      "Dockerfiles/entrypoint.celery.sh"
 
   beat:
     container_name: hnl__celery_beat
     build:
       context: .
-      dockerfile: Dockerfiles/Dockerfile.celery
+      dockerfile: Dockerfiles/Dockerfile.beat
     depends_on:
       - app
       - redis
