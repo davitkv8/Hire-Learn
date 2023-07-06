@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -17,17 +16,17 @@ jobs:
       run: |
         docker-compose build
         
-        docker tag hnl__app ghcr.io/davitkv8/app:${{ github.sha }}
+        docker tag app ghcr.io/davitkv8/app:${{ github.sha }}
         docker push ghcr.io/davitkv8/app:${{ github.sha }}
 
-        docker tag hnl__queue ghcr.io/davitkv8/queue:${{ github.sha }}
+        docker tag queue ghcr.io/davitkv8/queue:${{ github.sha }}
         docker push ghcr.io/davitkv8/queue:${{ github.sha }}
         
-        docker tag hnl__beat ghcr.io/beat:${{ github.sha }}
+        docker tag beat ghcr.io/davitkv8/beat:${{ github.sha }}
         docker push ghcr.io/davitkv8/beat:${{ github.sha }}
         
-        docker tag hnl__postgres ghcr.io/davitkv8/postgres:${{ github.sha }}
+        docker tag postgres ghcr.io/davitkv8/postgres:${{ github.sha }}
         docker push ghcr.io/davitkv8/postgres:${{ github.sha }}
         
-        docker tag hnl__redis ghcr.io/davitkv8/redis:${{ github.sha }}
+        docker tag redis ghcr.io/davitkv8/redis:${{ github.sha }}
         docker push ghcr.io/davitkv8/redis:${{ github.sha }}
