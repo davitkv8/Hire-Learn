@@ -148,4 +148,4 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 .terraform*
-terraform.tfstate
+terraform.tfstate*
