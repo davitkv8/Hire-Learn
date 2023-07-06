@@ -9,8 +9,6 @@ RUN pip install -r requirements_app.txt
 
 ADD . /app/
 
-RUN chmod 777 /app
-
 WORKDIR /app/
 
 EXPOSE 8000

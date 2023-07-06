@@ -1,0 +1,111 @@
+services:
+  app:
+    container_name: hnl__app
+    image: ghcr.io/davitkv8/app:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    env_file:
+      - envs/.env.postgres
+      - envs/.env.mail
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - SENTRY_DSN=https://e879ae852a0b4577bb99a9b46ef4f20e@o1152189.ingest.sentry.io/6230064
+      - CACHE_HOST_AND_PORT=memcached:11211
+      - RABBITMQ_HOST=rabbitmq
+    ports:
+      - 8000:8000
+#    volumes:
+#      - .:/app/
+    depends_on:
+      - postgres
+      - redis
+      - memcached
+      - rabbitmq
+    networks:
+      - app_network
+    entrypoint: "Dockerfiles/entrypoint.app.sh"
+
+  postgres:
+    restart: unless-stopped
+    container_name: hnl__postgres
+    image: postgres:14.5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - Dockerfiles/envs/.env.postgres
+    networks:
+      - app_network
+
+  memcached:
+    restart: unless-stopped
+    container_name: hnl__memcached
+    image: memcached
+    networks:
+      - app_network
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    container_name: hnl__redis
+    networks:
+      - app_network
+
+  queue:
+    container_name: hnl__queue
+    image: ghcr.io/davitkv8/queue:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    depends_on:
+      - rabbitmq
+    networks:
+      - app_network
+    env_file:
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
+    environment:
+      RABBITMQ_HOST: "rabbitmq"
+    entrypoint:
+      "Dockerfiles/entrypoint.queue.sh"
+
+  rabbitmq:
+    container_name: "hnl__rabbitmq"
+    image: rabbitmq:3-management
+    networks:
+      - app_network
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/etc/rabbitmq/conf.d/
+
+  celery:
+    container_name: hnl__celery_worker
+    image: ghcr.io/davitkv8/celery:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    depends_on:
+      - app
+      - redis
+    env_file:
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
+    networks:
+      - app_network
+    entrypoint:
+      "Dockerfiles/entrypoint.celery.sh"
+
+  beat:
+    container_name: hnl__celery_beat
+    image: ghcr.io/davitkv8/beat:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    depends_on:
+      - app
+      - redis
+    env_file:
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
+    networks:
+      - app_network
+    entrypoint:
+      "Dockerfiles/entrypoint.beat.sh"
+
+networks:
+  app_network:
+volumes:
+  postgres_data:
+  rabbitmq_data:
