@@ -166,11 +166,10 @@ resource "aws_instance" "prod" {
               sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               sudo chmod +x /usr/local/bin/docker-compose
               sudo systemctl start docker
-              sudo yum install nginx
+              sudo yum install nginx -y
               sudo systemctl start nginx
               sudo systemctl enable nginx
               sudo yum install git -y
-              docker login ghcr.io -u davitkv8 -p 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
               EOF
 
 }
