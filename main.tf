@@ -157,11 +157,6 @@ resource "aws_instance" "prod" {
       Environment = "prod"
     }
 
-    provisioner "file" {
-    source      = "/docker-puller"  # Replace with the path to your local file
-    destination = "/"  # Replace with the desired destination path on the instance
-  }
-
     user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y

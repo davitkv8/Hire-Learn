@@ -41,4 +41,4 @@ platforms_we_support = sorted(Platform.platform_choices)
 for platform in platforms_we_support:
     Platform.objects.get_or_create(platform=platform[0])
 
-print("ALL PROCESSES ENDED SUCCESSFULLY")
+print("ALL PROCESSES ENDED SUCCESSFULLY!")
