@@ -170,6 +170,7 @@ resource "aws_instance" "prod" {
               sudo systemctl start nginx
               sudo systemctl enable nginx
               sudo yum install git -y
+              docker login ghcr.io -u davitkv8 -p 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
               EOF
 
 }
