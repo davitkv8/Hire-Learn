@@ -1,7 +1,7 @@
 services:
   app:
     container_name: hnl__app
-    image: ghcr.io/davitkv8/app:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    image: ghcr.io/davitkv8/app:6adf6e2b71ef07ebdc539e6fd0492302b6a61122
     env_file:
       # - .env.mongo
       - Dockerfiles/envs/.env.postgres
@@ -52,7 +52,7 @@ services:
 
   queue:
     container_name: hnl__queue
-    image: ghcr.io/davitkv8/queue:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    image: ghcr.io/davitkv8/queue:6adf6e2b71ef07ebdc539e6fd0492302b6a61122
     depends_on:
       - rabbitmq
     networks:
@@ -79,7 +79,7 @@ services:
 
   celery:
     container_name: hnl__celery_worker
-    image: ghcr.io/davitkv8/celery:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    image: ghcr.io/davitkv8/celery:6adf6e2b71ef07ebdc539e6fd0492302b6a61122
     depends_on:
       - app
       - redis
@@ -93,7 +93,7 @@ services:
 
   beat:
     container_name: hnl__celery_beat
-    image: ghcr.io/davitkv8/beat:c4aeeed1e9f08a6bec5145f54904d01426161bf9
+    image: ghcr.io/davitkv8/beat:6adf6e2b71ef07ebdc539e6fd0492302b6a61122
     depends_on:
       - app
       - redis
