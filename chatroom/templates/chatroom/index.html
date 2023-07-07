@@ -29,7 +29,7 @@
                     <ul class="contacts">
                     {% for user in connected_users %}
                         <li class="active">
-                            <div onclick="changeChat('{{ request.user.username }}', '{{ user.username }}')"
+                            <div onclick="changeChat('{{ request.user.username }}', '{{ user.username }}', '{{ host }}')"
                                  class="d-flex bd-highlight">
                                 <div class="img_cont">
                                         <img src="{% get_media_prefix %}{{ user.image }}" alt="lecturer-image"
@@ -124,8 +124,8 @@
         const is_seen = JSON.parse(document.getElementById('is_seen').textContent);
         get_last_msg()
 
-        function changeChat(request_user, chat_member){
-            location.href = `http://127.0.0.1:8000/chatroom/inbox/chat_room/?request_user=${request_user}&chat_member=${chat_member}`
+        function changeChat(request_user, chat_member, host){
+            location.href = `http://${host}}/chatroom/inbox/chat_room/?request_user=${request_user}&chat_member=${chat_member}`
         }
 
         const chatSocket = new WebSocket(

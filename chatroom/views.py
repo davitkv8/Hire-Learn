@@ -7,6 +7,8 @@ from users.helpers import get_user_based_query_str, parse_values_from_lists_when
 from chatroom.namings import INBOX_MENU_LEFT_HAND_FIELD_VARIATIONS
 from django.contrib.auth.models import User
 
+from urllib.parse import urlparse
+
 
 def get_avail_chat_users(request):
 
@@ -38,6 +40,11 @@ def chat_room(request):
     response_data = {
 
     }
+
+    url = request.build_absolute_uri()
+    parsed_url = urlparse(url)
+
+    running_host_address = f"{parsed_url.hostname}:{parsed_url.port}"
 
     request_data = parse_values_from_lists_when_ajax_resp(dict(request.GET))
     response_data['chatting_with'] = request_data['chat_member']
@@ -81,7 +88,8 @@ def chat_room(request):
         'chatroom/index.html',
         context={
           "connected_users": connected_users,
-          "details": response_data
+          "details": response_data,
+          "host": running_host_address
         }
     )
 
