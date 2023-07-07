@@ -3,8 +3,9 @@ services:
     container_name: hnl__app
     image: ghcr.io/davitkv8/app:c4aeeed1e9f08a6bec5145f54904d01426161bf9
     env_file:
-      - envs/.env.postgres
-      - envs/.env.mail
+      # - .env.mongo
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
     environment:
       - REDIS_PORT=6379
       - REDIS_HOST=redis
@@ -22,7 +23,7 @@ services:
       - rabbitmq
     networks:
       - app_network
-    entrypoint: "entrypoint.app.sh"
+    entrypoint: "Dockerfiles/entrypoint.app.sh"
 
   postgres:
     restart: unless-stopped
@@ -31,7 +32,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - envs/.env.postgres
+      - Dockerfiles/envs/.env.postgres
     networks:
       - app_network
 
@@ -57,12 +58,12 @@ services:
     networks:
       - app_network
     env_file:
-      - envs/.env.postgres
-      - envs/.env.mail
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
     environment:
       RABBITMQ_HOST: "rabbitmq"
     entrypoint:
-      "entrypoint.queue.sh"
+      "Dockerfiles/entrypoint.queue.sh"
 
   rabbitmq:
     container_name: "hnl__rabbitmq"
@@ -83,12 +84,12 @@ services:
       - app
       - redis
     env_file:
-      - envs/.env.postgres
-      - envs/.env.mail
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
     networks:
       - app_network
     entrypoint:
-      "entrypoint.celery.sh"
+      "Dockerfiles/entrypoint.celery.sh"
 
   beat:
     container_name: hnl__celery_beat
@@ -97,12 +98,12 @@ services:
       - app
       - redis
     env_file:
-      - envs/.env.postgres
-      - envs/.env.mail
+      - Dockerfiles/envs/.env.postgres
+      - Dockerfiles/envs/.env.mail
     networks:
       - app_network
     entrypoint:
-      "entrypoint.beat.sh"
+      "Dockerfiles/entrypoint.beat.sh"
 
 networks:
   app_network:
