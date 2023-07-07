@@ -71,6 +71,6 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
           cd our_public_packages
-          bump2version --current-version 0.1.0 patch setup.py --commit --tag
+          bump2version path
           python setup.py sdist bdist_wheel
           twine upload dist/*
