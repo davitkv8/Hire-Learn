@@ -16,14 +16,14 @@ jobs:
       run: |
         docker-compose build
         
-        docker tag hire-learn_app ghcr.io/davitkv8/app:${{ github.sha }}
-        docker push ghcr.io/davitkv8/app:${{ github.sha }}
+        docker tag hire-learn_app ghcr.io/davitkv8/app:latest
+        docker push ghcr.io/davitkv8/app:latest
 
-        docker tag hire-learn_queue ghcr.io/davitkv8/queue:${{ github.sha }}
-        docker push ghcr.io/davitkv8/queue:${{ github.sha }}
+        docker tag hire-learn_queue ghcr.io/davitkv8/queue:latest
+        docker push ghcr.io/davitkv8/queue:latest
         
-        docker tag hire-learn_beat ghcr.io/davitkv8/beat:${{ github.sha }}
-        docker push ghcr.io/davitkv8/beat:${{ github.sha }}
+        docker tag hire-learn_beat ghcr.io/davitkv8/beat:latest
+        docker push ghcr.io/davitkv8/beat:latest
         
-        docker tag hire-learn_celery ghcr.io/davitkv8/celery:${{ github.sha }}
-        docker push ghcr.io/davitkv8/celery:${{ github.sha }}
+        docker tag hire-learn_celery ghcr.io/davitkv8/celery:latest
+        docker push ghcr.io/davitkv8/celery:latest

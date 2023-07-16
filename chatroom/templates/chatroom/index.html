@@ -125,7 +125,7 @@
         get_last_msg()
 
         function changeChat(request_user, chat_member, host){
-            location.href = `http://${host}}/chatroom/inbox/chat_room/?request_user=${request_user}&chat_member=${chat_member}`
+            location.href = `http://${window.location.host}/chatroom/inbox/chat_room/?request_user=${request_user}&chat_member=${chat_member}`
         }
 
         const chatSocket = new WebSocket(
